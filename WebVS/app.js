@@ -7,6 +7,7 @@
     session = require('express-session'),
     routes = require('./routes/index'),
     users = require('./routes/users'),
+    login = require('./routes/login'),
     app = express();
 
 var SessOpt = {
@@ -28,22 +29,10 @@ app.use(cookieParser());
 app.use(session(SessOpt))
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public'))).listen(8080);
+
 app.use('/', routes);
+app.use('/login', login);
 app.use('/users', users);
-
-
-app.get('/login', function (req, res, next) {
-    var sess = req.session
-    if (!sess.user) {
-        res.setHeader('Content-Type', 'text/html')
-        sess.user = 'Nikolay'
-        res.write('<p>User:' + sess.user + '</p>')
-        res.end()
-    } else {
-        res.redirect('/'); 
-    }
-})
-
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
