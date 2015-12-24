@@ -43,13 +43,13 @@ app.get('/login', function (req, res, next) {
     if (!sess.user) {
         res.setHeader('Content-Type', 'text/html')
         sess.user = 'Nick'
-        res.write('<p>Куку Ник</p>')
+        res.write('<p>User: </p>')
         res.end()
-        res.redirect('/');
     } else {
         res.redirect('/'); 
     }
 })
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
