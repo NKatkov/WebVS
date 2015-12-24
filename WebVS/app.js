@@ -32,8 +32,6 @@ app.use('/', routes);
 app.use('/users', users);
 
 
-
-// Access the session as req.session
 app.get('/login', function (req, res, next) {
     var sess = req.session
     if (!sess.user) {
@@ -45,9 +43,6 @@ app.get('/login', function (req, res, next) {
         res.redirect('/'); 
     }
 })
-
-
-
 
 
 // catch 404 and forward to error handler
