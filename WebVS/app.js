@@ -35,7 +35,6 @@ app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 } }))
 app.use('/', routes);
 app.use('/users', users);
 
-
 // Access the session as req.session
 app.get('/login', function (req, res, next) {
     var sess = req.session
