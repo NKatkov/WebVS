@@ -23,7 +23,6 @@ var sessOpt = {
     unset: "destroy"
 };
 
-
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
