@@ -18,7 +18,7 @@ router.post('/', function (req, res, next) {
     if (req.body.login && req.body.pass) {
         if (req.body.login == 'admin' && req.body.pass == '1') {
             //dbConnection
-            console.log(dbConnection.db.sessions.find());
+           // console.log(dbConnection.db.sessions.find());
             req.session.user = req.body.login
             res.redirect('/');
             return;
