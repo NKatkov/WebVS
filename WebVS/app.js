@@ -38,7 +38,7 @@ app.use(session({
     store: new MongoStore({ mongooseConnection: mongoose.connection })
 }));
 
-app.User = User = require('./models.js').User(db);
+//app.User = User = require('./models.js').User(db);
 
 app.use('/', routes);
 app.use('/login', login);
