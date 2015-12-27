@@ -7,9 +7,9 @@
     session = require('express-session'),
     routes = require('./routes/index'),
     users = require('./routes/users'),
+    MongoStore = require('connect-mongo')(session),
     login = require('./routes/login'),
-    mongoose = require('mongoose'),
-    MongoStore = require('connect-mongo')(session);
+    db = require('./db').db;
     app = express();
 
 // view engine setup
@@ -25,17 +25,9 @@ app.use(cookieParser());
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public'))).listen(8080);
 
-mongoose.connect('mongodb://nhost.cloudapp.net:27017/WebVS');
-var db = mongoose.connection;
-global.dbConnection = db;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function callback() {
-    console.log('Successfully connected!');
-});
-
 app.use(session({
     secret: 'sdfasdfasdfasdf',
-    store: new MongoStore({ mongooseConnection: mongoose.connection })
+    store: new MongoStore({ mongooseConnection: db })
 }));
 
 //app.User = User = require('./models.js').User(db);
@@ -43,12 +35,6 @@ app.use(session({
 app.use('/', routes);
 app.use('/login', login);
 app.use('/users', users);
-
-
-
-
-
-
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     var err = new Error('Not Found');
