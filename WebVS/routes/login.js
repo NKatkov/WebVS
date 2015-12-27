@@ -1,15 +1,11 @@
 ﻿var express = require('express');
-var crypto = require('crypto');
-var mongoose = require('mongoose');
 var router = express.Router();
-var db = require('../db');
-var User = require('../db').user;
+var db = require('../db').db;
+var User = require('../db').User;
 
 router.get('/', function (req, res,next) {
     var sess = req.session
     if (!sess.user) {
-        //sess.user = 'Nikolay'
-        
         res.render('login', { title: 'Express', User: sess.user });
     } else {
         res.redirect('/');
@@ -22,27 +18,25 @@ router.post('/', function (req, res, next) {
             var newUser = new User({ username: req.body.login2, password: req.body.pass2 })
             newUser.save();
             User.find(function (err, users) {
-                console.log(users)
+                //console.log(users)
             })
         } else {
-            if (req.body.login == 'admin' && req.body.pass == '1') {
-                
-
-                //dbConnection
-                //console.log(global.dbConnection.db.sessions.find());
-                req.session.user = req.body.login
+            User.authorize(req.body.login, req.body.pass, function (err, User) {
+                if (err) {
+                    if (err instanceof AuthError) {
+                        return next(new HttpError(403, err.message));
+                    } else {
+                        return next(err);
+                    } 
+                }
+                req.session.user = User._id;
                 res.redirect('/');
-                return;
-            }
+            })
+            return
         }
     }
     res.redirect('/login');
 });
 
-function hashPWD(pwd) {
-    return pwdMD5 = crypto.createHash('md5')
-  .update(pwd)
-  .digest('hex');
-}
 
 module.exports = router;

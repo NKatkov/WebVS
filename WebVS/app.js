@@ -4,12 +4,12 @@
     logger = require('morgan');
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser'),
-    session = require('express-session'),
     routes = require('./routes/index'),
     users = require('./routes/users'),
+    session = require('express-session'),
     MongoStore = require('connect-mongo')(session),
     login = require('./routes/login'),
-    db = require('./db').db;
+    db = require('./db');
     app = express();
 
 // view engine setup
@@ -26,15 +26,14 @@ app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public'))).listen(8080);
 
 app.use(session({
-    secret: 'sdfasdfasdfasdf',
-    store: new MongoStore({ mongooseConnection: db })
+    secret: 'sdfasdfasdfas',
+    store: new MongoStore({ mongooseConnection: db.db })
 }));
-
-//app.User = User = require('./models.js').User(db);
 
 app.use('/', routes);
 app.use('/login', login);
 app.use('/users', users);
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     var err = new Error('Not Found');
@@ -42,9 +41,6 @@ app.use(function (req, res, next) {
     next(err);
 });
 
-// error handlers
-// development error handler
-// will print stacktrace
 if (app.get('env') === 'development') {
     app.use(function (err, req, res, next) {
         res.status(err.status || 500);
@@ -55,8 +51,6 @@ if (app.get('env') === 'development') {
     });
 }
 
-// production error handler
-// no stacktraces leaked to user
 app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
