@@ -3,7 +3,7 @@ var router = express.Router();
 var db = require('../db').db;
 var User = require('../db').User;
 
-router.get('/', function (req, res,next) {
+router.get('/', function (req, res, next) {
     var sess = req.session
     if (!sess.user) {
         res.render('login', { error: "Пользователь не авторизован" });

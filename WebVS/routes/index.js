@@ -3,11 +3,11 @@ var router = express.Router();
 var iconv = require('iconv-lite');
 var Converter = require("csvtojson").Converter;
 var util = require('util');
-    
+
 
 /* GET home page. */
 router.get('/', function (req, res) {
-var sess = req.session
+    var sess = req.session
     if (sess.user) {
         res.render('index', { title: 'Главная страница ', User: sess.user });
     } else {
@@ -16,15 +16,15 @@ var sess = req.session
 });
 
 router.get('/ajax/info', function (req, res) {
-var exec = require('child_process').exec,
-    converter = new Converter({}),
-    child = exec('chcp 65001 | systeminfo /FO CSV"', function (error, stdout, stderr) {
-        converter.fromString(stdout, function (err, result) {
-            
+    var exec = require('child_process').exec,
+        converter = new Converter({}),
+        child = exec('chcp 65001 | systeminfo /FO CSV"', function (error, stdout, stderr) {
+            converter.fromString(stdout, function (err, result) {
+                
                 res.json(result);
             //console.log(result[5])
+            });
         });
-    });
 });
 
 function getRam(params, onComplete) {

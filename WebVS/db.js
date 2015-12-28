@@ -15,14 +15,14 @@ var UserSchema = new Schema({
     username: { type: String, index: { unique: true }, required: true },
     hashedPassword: { type: String, required: true },
     salt: { type: String, required: true },
-    created: {type: Date, default: Date.now}
+    created: { type: Date, default: Date.now }
 });
 
 UserSchema.method({
-    encryptPassword: function (password){
+    encryptPassword: function (password) {
         return crypto.createHmac('sha1', this.salt).update(password).digest('hex');
     },
-    checkPassword: function (password){
+    checkPassword: function (password) {
         return this.encryptPassword(password) === this.hashedPassword;
     }
 })
