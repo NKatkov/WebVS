@@ -6,34 +6,38 @@ var User = require('../db').User;
 router.get('/', function (req, res,next) {
     var sess = req.session
     if (!sess.user) {
-        res.render('login', { title: 'Express', User: sess.user });
+        res.render('login', { error: "Пользователь не авторизован" });
     } else {
         res.redirect('/');
     }
 });
 
-router.post('/', function (req, res, next) {
-    if ((req.body.login && req.body.pass) || (req.body.login2 && req.body.pass2)) {
-        if (req.body.reg == "ok") {
-            var newUser = new User({ username: req.body.login2, password: req.body.pass2 })
-            newUser.save();
-            User.find(function (err, users) {
-                //console.log(users)
-            })
-        } else {
-            User.authorize(req.body.login, req.body.pass, function (err, User) {
-                if (err) {
-                    if (err instanceof AuthError) {
-                        return next(new HttpError(403, err.message));
-                    } else {
-                        return next(err);
-                    } 
-                }
+router.post('/auth', function (req, res, next) {
+    if (req.body.login && req.body.pass) {
+        User.authorize(req.body.login, req.body.pass, function (err, User) {
+            if (err) {
+                res.render('login', { error: err });
+            } else {
                 req.session.user = User._id;
                 res.redirect('/');
-            })
-            return
-        }
+            }
+        })
+        return
+    }
+    res.redirect('/login');
+});
+
+router.post('/reg', function (req, res, next) {
+    if (req.body.login && req.body.pass) {
+        var newUser = new User({ username: req.body.login, password: req.body.pass })
+        newUser.save(function (err) {
+            if (!err) {
+                res.render('login', { status: "Пользователь " + req.body.login + "успешно зарегистрирован" });
+            } else {
+                res.render('login', { status: "Error:reg(newUser.save)" });
+            }
+        });
+        return
     }
     res.redirect('/login');
 });

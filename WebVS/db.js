@@ -45,28 +45,17 @@ UserSchema.statics.authorize = function (username, password, callback) {
         function (callback) {
             User.findOne({ username: username }, callback);
         },
-        function (User, callback) {
-            if (User) {
-                if (User.checkPassword(password)) {
-                    callback(null, User);
+        function (aUser, callback) {
+            if (aUser) {
+                if (aUser.checkPassword(password)) {
+                    callback(null, aUser);
                 } else {
-                    console.log("Пароль неверен")
-                    //callback(new AuthError("Пароль неверен"));
+                    callback("Логин или пароль указаны не верно!", aUser);
                 }
             }
         }
     ], callback);
 };
-
-function AuthError(message) {
-    Error.apply(this, arguments);
-    Error.captureStackTrace(this, AuthError);
-    this.message = message;
-}
-
-//util.inherits(AuthError, Error);
-//AuthError.prototype.name = 'AuthError';
-//exports.AuthError = AuthError;
 
 module.exports.db = db;
 module.exports.User = mongoose.model("User", UserSchema);

@@ -1,23 +1,24 @@
 ﻿extends layout
 
 block content
-    h1= title
-    p User:  #{User}
-    form(method="post")
+    h1 Страница авторизации и регистрации
+    h2 Авторизация
+    p #{message}
+    form(method="post",action="/login/auth")
         input(type="text", name="login")
         br
         input(type="password", name="pass")
         button Log in
+    p #{error}
 
 
-    p Регистрация
-    form(method="post")
-        input(type="text", name="login2")
+    h2 Регистрация
+    form(method="post", action="/login/reg")
+        input(type="text", name="login")
         br
-        input(type="password", name="pass2")
-        input(type="text", name="reg", value="ok", style="display:none")
+        input(type="password", name="pass")
         button Зарегистрировать
-
+        p #{status}
 
 
 
