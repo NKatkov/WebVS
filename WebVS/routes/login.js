@@ -1,6 +1,7 @@
 ﻿var express = require('express');
 var router = express.Router();
-<<<<<<< HEAD
+var db = require('../db').db;
+var User = require('../db').User;
 var mongoose = require('mongoose');
 
 var UserSchema = new mongoose.Schema( {
@@ -12,13 +13,7 @@ var UserSchema = new mongoose.Schema( {
 
 var User = dbConnection.model("User",UserSchema)
 
-router.get('/', function (req, res,next) {
-=======
-var db = require('../db').db;
-var User = require('../db').User;
-
 router.get('/', function (req, res, next) {
->>>>>>> f9e0052126ebb6c40b08ae8a772cccdcdb4884dc
     var sess = req.session
     if (!sess.user) {
         res.render('login', { error: "Пользователь не авторизован" });
@@ -29,7 +24,6 @@ router.get('/', function (req, res, next) {
 
 router.post('/auth', function (req, res, next) {
     if (req.body.login && req.body.pass) {
-<<<<<<< HEAD
         if (req.body.login == 'admin' && req.body.pass == '1') {
           var newUser = new User({ name: "Alice", pass: "qwe"})
 	  		newUser.save(function (err, newUser) {
@@ -45,7 +39,7 @@ router.post('/auth', function (req, res, next) {
             res.redirect('/');
             return;
         }
-=======
+
         User.authorize(req.body.login, req.body.pass, function (err, User) {
             if (err) {
                 res.render('login', { error: err });
@@ -55,7 +49,7 @@ router.post('/auth', function (req, res, next) {
             }
         })
         return
->>>>>>> f9e0052126ebb6c40b08ae8a772cccdcdb4884dc
+
     }
     res.redirect('/login');
 });
