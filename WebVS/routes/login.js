@@ -1,6 +1,6 @@
 ﻿var express = require('express');
-var crypto = require('crypto');
 var router = express.Router();
+<<<<<<< HEAD
 var mongoose = require('mongoose');
 
 var UserSchema = new mongoose.Schema( {
@@ -13,18 +13,23 @@ var UserSchema = new mongoose.Schema( {
 var User = dbConnection.model("User",UserSchema)
 
 router.get('/', function (req, res,next) {
+=======
+var db = require('../db').db;
+var User = require('../db').User;
+
+router.get('/', function (req, res, next) {
+>>>>>>> f9e0052126ebb6c40b08ae8a772cccdcdb4884dc
     var sess = req.session
     if (!sess.user) {
-        //sess.user = 'Nikolay'
-        
-        res.render('login', { title: 'Express', User: sess.user });
+        res.render('login', { error: "Пользователь не авторизован" });
     } else {
         res.redirect('/');
     }
 });
 
-router.post('/', function (req, res, next) {
+router.post('/auth', function (req, res, next) {
     if (req.body.login && req.body.pass) {
+<<<<<<< HEAD
         if (req.body.login == 'admin' && req.body.pass == '1') {
           var newUser = new User({ name: "Alice", pass: "qwe"})
 	  		newUser.save(function (err, newUser) {
@@ -40,15 +45,35 @@ router.post('/', function (req, res, next) {
             res.redirect('/');
             return;
         }
+=======
+        User.authorize(req.body.login, req.body.pass, function (err, User) {
+            if (err) {
+                res.render('login', { error: err });
+            } else {
+                req.session.user = User._id;
+                res.redirect('/');
+            }
+        })
+        return
+>>>>>>> f9e0052126ebb6c40b08ae8a772cccdcdb4884dc
     }
     res.redirect('/login');
 });
 
+router.post('/reg', function (req, res, next) {
+    if (req.body.login && req.body.pass) {
+        var newUser = new User({ username: req.body.login, password: req.body.pass })
+        newUser.save(function (err) {
+            if (!err) {
+                res.render('login', { status: "Пользователь " + req.body.login + "успешно зарегистрирован" });
+            } else {
+                res.render('login', { status: "Error:reg(newUser.save)" });
+            }
+        });
+        return
+    }
+    res.redirect('/login');
+});
 
-function hashPWD(pwd) {
-    return pwdMD5 = crypto.createHash('md5')
-  .update(pwd)
-  .digest('hex');
-}
 
 module.exports = router;
