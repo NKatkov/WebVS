@@ -27,7 +27,7 @@ app.use(express.static(path.join(__dirname, 'public'))).listen(8080);
 
 app.use(session({
     secret: 'sdfasdfasdfas',
-    store: new MongoStore({ mongooseConnection: db.db })
+    //store: new MongoStore({ mongooseConnection: db.db })
 }));
 
 app.use('/', routes);
