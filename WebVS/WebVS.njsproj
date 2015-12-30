@@ -5,6 +5,9 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
     <Name>WebVS</Name>
     <RootNamespace>WebVS</RootNamespace>
+    <NodeExeArguments>
+    </NodeExeArguments>
+    <NodeExePath>C:\Program Files\nodejs\node.exe</NodeExePath>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -32,11 +35,16 @@
   <ItemGroup>
     <Compile Include="app.js" />
     <Compile Include="db.js" />
+    <Compile Include="node_modules\diskinfo\lib\diskinfo.js" />
+    <Compile Include="node_modules\diskinfo\test\test.js" />
     <Compile Include="routes\index.js" />
     <Compile Include="routes\login.js" />
     <Compile Include="models.js" />
     <Compile Include="routes\users.js" />
     <Content Include="bin\www" />
+    <Content Include="node_modules\diskinfo\LICENSE.md" />
+    <Content Include="node_modules\diskinfo\package.json" />
+    <Content Include="node_modules\diskinfo\README.md" />
     <Content Include="package.json" />
     <Content Include="public\stylesheets\style.styl" />
     <Content Include="README.md" />
@@ -48,6 +56,10 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\" />
+    <Folder Include="node_modules\" />
+    <Folder Include="node_modules\diskinfo\" />
+    <Folder Include="node_modules\diskinfo\lib\" />
+    <Folder Include="node_modules\diskinfo\test\" />
     <Folder Include="public\" />
     <Folder Include="public\images\" />
     <Folder Include="public\javascripts\" />

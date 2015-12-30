@@ -5,6 +5,7 @@ var Converter = require("csvtojson").Converter;
 var util = require('util');
 var exec = require('child_process').exec;
 var si = require('systeminformation');
+var async = require('async');
 
 
 /* GET home page. */
@@ -13,25 +14,15 @@ router.get('/', function (req, res) {
     if (sess.user) {
         res.render('index', { title: 'Главная страница ', User: sess.user });
     } else {
-        res.redirect('/login');
+        res.redirect('/ajax/info');
+        //res.redirect('/login');
     }
 });
 
 router.get('/ajax/info', function (req, res) {
-    var Info;
-    getInfo(Info, function (err, str) {
+    getInfo(null, function (err, str) {
         res.json(str);
     })
-	
-});
-
-router.get('/ajax/info3', function (req, res) {
-	var Info;
-	getOS(Info,function(err,str){
-		getCPU(str,function(err,str){
-			res.json(str);
-		})
-	})
 	
 });
 
@@ -51,57 +42,77 @@ function getInfo(result, onComplete) {
     var err;
     var os = require('os');
     var d = require('diskinfo');
-    result = {
-        Name : os.hostname(), 
-        OS: os.platform(),
-        VerOS: os.arch(),
-        VerKernel: os.release(),
-        CPUcout: os.cpus().length,
-        RAM: Math.round(os.totalmem() / 1024 / 1024),
-        FreeRAM: Math.round(os.freemem() / 1024 / 1024)
-    };
-    d.getDrives(function (err, aDrives) {
-        for (var i = 0; i < aDrives.length; i++) {
-            console.log('Drive ' + aDrives[i].filesystem);
-            console.log('blocks ' + aDrives[i].blocks);
-            console.log('used ' + aDrives[i].used);
-            console.log('available ' + aDrives[i].available);
-            console.log('capacity ' + aDrives[i].capacity);
-            console.log('mounted ' + aDrives[i].mounted);
-            console.log('-----------------------------------------');
+    var tasksIndex = {
+        OS: function (callback) {
+            OS = {
+                Name : os.hostname(), 
+                OS: os.platform(),
+                VerOS: os.arch(),
+                VerKernel: os.release(),
+                CPU: os.cpus()[1].model,
+                CPUcout: os.cpus().length,
+                RAM: Math.round(os.totalmem() / 1024 / 1024),
+                FreeRAM: Math.round(os.freemem() / 1024 / 1024)
+            };
+            callback(err, OS)
+        },   
+        Drives: function (callback) {
+            d.getDrives(function (err, aDrives) {
+                var num = -1
+                var Drives = {};
+                for (var i = 0; i < aDrives.length; i++) {
+                    if (aDrives[i].used != 0) {
+                        num += 1
+                        Drives.count = num + 1;
+                        Drives["disk" + num] = {
+                            Drive: aDrives[i].filesystem,
+                            mounted: aDrives[i].mounted,
+                            blocks : aDrives[i].blocks,
+                            used: aDrives[i].used,
+                            available: aDrives[i].available,
+                            capacity: aDrives[i].capacity,
+                        }
+                    }
+                }
+                callback(err, Drives);
+            })
+        },
+        NetworkInterfaces: function (callback) {
+            callback(err, os.networkInterfaces());
         }
-    })
-
-    onComplete(err, result);
+    };
+    async.parallel(tasksIndex, function (err, result) {
+        onComplete(err, result);
+    });
 }
 
 function getOS2(result, onComplete) {
-	var err;
-	var converter = new Converter({})
+    var err;
+    var converter = new Converter({})
     var child = exec('uname -n -s -r -i', function (error, stdout, stderr) {
-		var str = stdout.split(' ')
-		result = {Name : str[1], OS: str[0],verOS: str[3], verKernel: str[2]};
-		onComplete(err, result);
-	});
+        var str = stdout.split(' ')
+        result = { Name : str[1], OS: str[0], verOS: str[3], verKernel: str[2] };
+        onComplete(err, result);
+    });
 }
 
 function getCPU(result, onComplete) {
-	var err;
-	var converter = new Converter({})
+    var err;
+    var converter = new Converter({})
     var child = exec(' cat /proc/cpuinfo | grep -e "cpu " -e "model name"', function (error, stdout, stderr) {
-		
-		var str = stdout.split('\n')
-		console.log(stdout);
-		var result2 = stdout.match(/\: .*/ig); 
-		console.log(result2);
-		
-		
-		result.Namew = str[1];
-		result.OSw = str[0];
-		result.verOSw = str[3];
-		result.verKernel = str[2];
-		onComplete(err, result);
-	});
+        
+        var str = stdout.split('\n')
+        console.log(stdout);
+        var result2 = stdout.match(/\: .*/ig);
+        console.log(result2);
+        
+        
+        result.Namew = str[1];
+        result.OSw = str[0];
+        result.verOSw = str[3];
+        result.verKernel = str[2];
+        onComplete(err, result);
+    });
 }
 
 
