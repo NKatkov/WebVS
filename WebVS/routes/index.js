@@ -49,7 +49,7 @@ function getInfo(result, onComplete) {
                 OS: os.platform(),
                 VerOS: os.arch(),
                 VerKernel: os.release(),
-                CPU: os.cpus()[1].model,
+                CPU: os.cpus()[0].model,
                 CPUcout: os.cpus().length,
                 RAM: Math.round(os.totalmem() / 1024 / 1024),
                 FreeRAM: Math.round(os.freemem() / 1024 / 1024)
