@@ -15,7 +15,7 @@
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-
+ 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
@@ -27,10 +27,11 @@ app.use(express.static(path.join(__dirname, 'public'))).listen(8080);
 
 app.use(session({
     secret: 'sdfasdfasdfas',
-    //store: new MongoStore({ mongooseConnection: db.db })
+    store: new MongoStore({ mongooseConnection: db.db })
 }));
 
 app.use('/', routes);
+app.use('/login/auth', routes);
 app.use('/login', login);
 app.use('/users', users);
 

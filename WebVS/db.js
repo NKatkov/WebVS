@@ -40,7 +40,6 @@ UserSchema.virtual('password')
 
 UserSchema.statics.authorize = function (username, password, callback) {
     var User = this;
-    
     async.waterfall([
         function (callback) {
             User.findOne({ username: username }, callback);
@@ -52,7 +51,10 @@ UserSchema.statics.authorize = function (username, password, callback) {
                 } else {
                     callback("Логин или пароль указаны не верно!", aUser);
                 }
-            }
+            } else {
+				callback("Логин или пароль указаны не верно!", aUser);
+			}
+				
         }
     ], callback);
 };

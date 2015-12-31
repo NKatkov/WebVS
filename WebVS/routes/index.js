@@ -14,8 +14,8 @@ router.get('/', function (req, res) {
     if (sess.user) {
         res.render('index', { title: 'Главная страница ', User: sess.user });
     } else {
-        res.redirect('/ajax/info');
-        //res.redirect('/login');
+        //res.redirect('/ajax/info');
+        res.redirect('/login');
     }
 });
 
@@ -23,7 +23,6 @@ router.get('/ajax/info', function (req, res) {
     getInfo(null, function (err, str) {
         res.json(str);
     })
-	
 });
 
 router.get('/ajax/info2', function (req, res) {
@@ -31,7 +30,6 @@ router.get('/ajax/info2', function (req, res) {
         converter = new Converter({}),
         child = exec('chcp 65001 | systeminfo /FO CSV"', function (error, stdout, stderr) {
             converter.fromString(stdout, function (err, result) {
-                
                 res.json(result);
             //console.log(result[5])
             });
