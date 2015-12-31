@@ -32,6 +32,8 @@ app.use(session({
 
 app.use('/', routes);
 app.use('/login/auth', routes);
+app.use('/man/srv', routes);
+
 app.use('/login', login);
 app.use('/users', users);
 

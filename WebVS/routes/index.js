@@ -19,6 +19,16 @@ router.get('/', function (req, res) {
     }
 });
 
+router.get('/man/srv', function (req, res) {
+    var sess = req.session
+    if (sess.user) {
+        res.render('srv', { title: 'Управление сервером ', User: sess.user });
+    } else {
+        //res.redirect('/ajax/info');
+        res.redirect('/login');
+    }
+});
+
 router.get('/ajax/info', function (req, res) {
     getInfo(null, function (err, str) {
         res.json(str);
