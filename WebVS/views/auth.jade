@@ -4,7 +4,7 @@ block content
     h1 Страница авторизации и регистрации
     h2 Авторизация
     p #{message}
-    form(method="post",action="/login/auth")
+    form(method="post",action="/auth/login")
         input(type="text", name="login")
         br
         input(type="password", name="pass")
@@ -13,7 +13,7 @@ block content
 
 
     h2 Регистрация
-    form(method="post", action="/login/reg")
+    form(method="post", action="/auth/reg")
         input(type="text", name="login")
         br
         input(type="password", name="pass")

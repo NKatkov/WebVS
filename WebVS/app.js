@@ -5,10 +5,9 @@
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser'),
     routes = require('./routes/index'),
-    users = require('./routes/users'),
     session = require('express-session'),
     MongoStore = require('connect-mongo')(session),
-    login = require('./routes/login'),
+    auth = require('./routes/auth'),
     db = require('./db'),
     app = express();
 
@@ -31,11 +30,14 @@ app.use(session({
 }));
 
 app.use('/', routes);
-app.use('/login/auth', routes);
-app.use('/man/srv', routes);
+app.use('/auth/login', routes);
 
-app.use('/login', login);
-app.use('/users', users);
+app.use('/auth', auth);
+app.use('/man/srv', require('./routes/srv'));
+app.use('/man/users', require('./routes/users'));
+
+
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

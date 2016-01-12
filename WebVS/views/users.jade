@@ -1,0 +1,21 @@
+﻿extends layout
+
+block content
+  h1 Личный кабинет
+  p #{title}
+  table
+      tr
+        td
+          ul
+            li: a(href="/man/users/create") Создать пользователя
+            li: a(href="/man/users/edit") Изменить пользователя
+            li: a(href="/man/users/editperm") Изменить права пользователя
+            li: a(href="/man/users/delete") Удалить пользователя
+            li: a(href="/") На главную
+        td
+            include 
+  br
+  br
+  br
+  br
+  a(href="/auth/logout") Сменить пользователя

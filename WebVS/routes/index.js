@@ -11,21 +11,12 @@ var async = require('async');
 /* GET home page. */
 router.get('/', function (req, res) {
     var sess = req.session
+    //sess.user = 'admin'
     if (sess.user) {
-        res.render('index', { title: 'Главная страница ', User: sess.user });
+        res.render('index', { title: 'Личный кабинет', User: sess.user });
     } else {
         //res.redirect('/ajax/info');
-        res.redirect('/login');
-    }
-});
-
-router.get('/man/srv', function (req, res) {
-    var sess = req.session
-    if (sess.user) {
-        res.render('srv', { title: 'Управление сервером ', User: sess.user });
-    } else {
-        //res.redirect('/ajax/info');
-        res.redirect('/login');
+        res.redirect('/auth');
     }
 });
 
@@ -103,27 +94,6 @@ function getOS2(result, onComplete) {
         onComplete(err, result);
     });
 }
-
-function getCPU(result, onComplete) {
-    var err;
-    var converter = new Converter({})
-    var child = exec(' cat /proc/cpuinfo | grep -e "cpu " -e "model name"', function (error, stdout, stderr) {
-        
-        var str = stdout.split('\n')
-        console.log(stdout);
-        var result2 = stdout.match(/\: .*/ig);
-        console.log(result2);
-        
-        
-        result.Namew = str[1];
-        result.OSw = str[0];
-        result.verOSw = str[3];
-        result.verKernel = str[2];
-        onComplete(err, result);
-    });
-}
-
-
 
 function getRam(params, onComplete) {
     //var result = { use: 54654, full: 999999, free: 38415 }

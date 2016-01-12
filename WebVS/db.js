@@ -6,7 +6,11 @@
 
 mongoose.connect('mongodb://nhost.cloudapp.net:27017/WebVS');
 var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
+db.on('error', function (error) {
+    console.error.bind(console, 'connection error:');
+    mongoose.connect('mongodb://127.0.0.1:27017/WebVS');
+});
+
 db.once('open', function callback() {
     console.log('Successfully connected!');
 });
@@ -52,8 +56,8 @@ UserSchema.statics.authorize = function (username, password, callback) {
                     callback("Логин или пароль указаны не верно!", aUser);
                 }
             } else {
-				callback("Логин или пароль указаны не верно!", aUser);
-			}
+                callback("Логин или пароль указаны не верно!", aUser);
+            }
 				
         }
     ], callback);

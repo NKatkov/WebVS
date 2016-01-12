@@ -4,4 +4,7 @@ block content
   h1= title
   p Личный кабинет
   ul
-    li: a(href="/ajax/info") Перезагрузить
+    li: a(href="/man/srv/reboot") Перезагрузить
+    li: a(href="/man/srv/shutdown") Выключить
+    li: a(href="/") На главную
+  p #{status}

@@ -1,14 +1,19 @@
 ﻿extends layout
 
 block content
-  h1= title
-  p Личный кабинет
+  h1 Главная страница
+  p #{title}
   ul
     li: a(href="/ajax/info") Информация о сервере
     li: a(href="/man/srv") Управление Сервером 
     li Управление пакетами 
-    li Управление пользователями 
+    li: a(href="/man/users") Управление пользователями 
     li Управление приложениями Nodejs
     li Управление пакетами npm
     li Мониторинг системы
     li Управление базами данных
+  br
+  br
+  br
+  br
+  a(href="/auth/logout") Сменить пользователя
