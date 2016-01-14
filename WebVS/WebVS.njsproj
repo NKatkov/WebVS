@@ -50,6 +50,9 @@
     <Content Include="public\stylesheets\style.styl" />
     <Content Include="README.md" />
     <Content Include="task.txt" />
+    <Content Include="views\user_menu_edit.jade" />
+    <Content Include="views\user_menu_create.jade" />
+    <Content Include="views\user_menu.jade" />
     <Content Include="views\users.jade" />
     <Content Include="views\index.jade" />
     <Content Include="views\layout.jade" />

@@ -39,9 +39,9 @@ router.post('/reg', function (req, res, next) {
         var newUser = new User({ username: req.body.login, password: req.body.pass })
         newUser.save(function (err) {
             if (!err) {
-                res.render('auth', { status: "Пользователь " + req.body.login + "успешно зарегистрирован" });
+                res.render('user_menu_create', { title: 'Управление пользователями', status: "Пользователь " + req.body.login + " успешно зарегистрирован" });
             } else {
-                res.render('auth', { status: "Error:reg(newUser.save)" });
+                res.render('user_menu_create', { title: 'Управление пользователями', status: "Error:reg(newUser.save)" });
             }
         });
         return
