@@ -6,6 +6,7 @@ var util = require('util');
 var exec = require('child_process').exec;
 var si = require('systeminformation');
 var async = require('async');
+var io_client = require('socket.io-client');
 
 
 /* GET home page. */
@@ -24,6 +25,11 @@ router.get('/ajax/info', function (req, res) {
     getInfo(null, function (err, str) {
         res.json(str);
     })
+});
+
+router.get('/test', function (req, ress) {
+
+
 });
 
 router.get('/ajax/info2', function (req, res) {
