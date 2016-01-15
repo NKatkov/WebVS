@@ -6,13 +6,13 @@ block content
     table
         tr 
             td: include user_menu
-            td: form(action="/auth/edit" method="post")
-                div: select(id="xxx", name="xxxyyy")
+            td: form(action="/man/users/delete" method="post")
+                div: select(id="xxx", name="username")
                     -for(var i = 0;i<list_user.length;i++){
                     -var list = list_user[i].username
                     option(value="#{list}")  #{list}
                     -}
-                div: input(type="submit" value="Изменить")
+                div: input(type="submit" value="Удалить")
     p #{status}
     br
     br

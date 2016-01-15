@@ -6,7 +6,7 @@ block content
     table
         tr 
             td: include user_menu
-            td: form(action="/auth/edit" method="post")
+            td: form(action="/auth/edit_perm" method="post")
                 div: select(id="xxx", name="xxxyyy")
                     -for(var i = 0;i<list_user.length;i++){
                     -var list = list_user[i].username
