@@ -4,6 +4,7 @@ var User = require('../db').User;
 
 router.get('/', function (req, res, next) {
     var sess = req.session
+    
     if (!sess.user) {
         res.render('auth', { error: "Пользователь не авторизован" });
     } else {
@@ -38,7 +39,11 @@ router.post('/reg', function (req, res, next) {
         var newUser = new User({ username: req.body.login, password: req.body.pass })
         newUser.save(function (err) {
             if (!err) {
-                res.render('user_menu_create', { title: 'Управление пользователями', status: "Пользователь " + req.body.login + " успешно зарегистрирован" });
+                if (req.session.user) {
+                    res.render('user_menu_create', { title: 'Управление пользователями', status: "Пользователь " + req.body.login + " успешно зарегистрирован" });
+                } else {
+                    res.render('auth', { title: 'Управление пользователями', status: "Пользователь " + req.body.login + " успешно зарегистрирован" });
+                }
             } else {
                 res.render('user_menu_create', { title: 'Управление пользователями', status: "Error:reg(newUser.save)" });
             }
@@ -47,6 +52,5 @@ router.post('/reg', function (req, res, next) {
     }
     res.redirect('/auth');
 });
-
 
 module.exports = router;

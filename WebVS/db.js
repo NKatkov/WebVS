@@ -2,10 +2,10 @@
     crypto = require('crypto'),
     async = require('async'),
     Schema = mongoose.Schema,
-    util = require("util"),
-    db = mongoose.connection;
+    util = require("util");
 
 var conn = mongoose.connect('mongodb://nhost.cloudapp.net:27017/WebVS');
+var db = mongoose.connection;
 db.on('error', function (error) {
     console.error.bind(console, 'connection error:');
     mongoose.connect('mongodb://127.0.0.1:27017/WebVS');
@@ -41,7 +41,6 @@ UserSchema.virtual('password')
     return this._plainPassword;
 });
 
-
 UserSchema.statics.authorize = function (username, password, callback) {
     var User = this;
     async.waterfall([
@@ -62,6 +61,7 @@ UserSchema.statics.authorize = function (username, password, callback) {
         }
     ], callback);
 };
+
 module.exports.conn = conn;
 module.exports.db = db;
 module.exports.User = mongoose.model("User", UserSchema);

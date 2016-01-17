@@ -29,7 +29,6 @@ router.get('/ajax/info', function (req, res) {
 
 router.get('/test', function (req, ress) {
 
-
 });
 
 router.get('/ajax/info2', function (req, res) {

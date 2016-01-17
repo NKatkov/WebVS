@@ -26,7 +26,8 @@ app.use(express.static(path.join(__dirname, 'public'))).listen(8080);
 
 app.use(session({
     secret: 'sdfasdfasdfas',
-    store: new MongoStore({ mongooseConnection: db.db })
+    store: new MongoStore({ mongooseConnection: db.db }),
+    saveUninitialized: true,
 }));
 
 app.use('/', routes);
@@ -35,9 +36,6 @@ app.use('/auth/login', routes);
 app.use('/auth', auth);
 app.use('/man/srv', require('./routes/srv'));
 app.use('/man/users', require('./routes/users'));
-
-
-
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
