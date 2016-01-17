@@ -1,4 +1,4 @@
-﻿var express = require('express'),
+var express = require('express'),
     path = require('path'),
     favicon = require('serve-favicon'),
     logger = require('morgan'),
@@ -36,6 +36,7 @@ app.use('/auth/login', routes);
 app.use('/auth', auth);
 app.use('/man/srv', require('./routes/srv'));
 app.use('/man/users', require('./routes/users'));
+app.use('/man/package', require('./routes/package'));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

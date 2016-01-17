@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1= title
+  p Личный кабинет
+  ul
+    li: a(href="/man/package/list") Список пакетов
+    li: a(href="/man/package/install") Установить пакет
+    li: a(href="/man/package/update") Обновить пакет
+    li: a(href="/man/package/update_all") Обновить все пакеты
+    li: a(href="/man/package/uninstall") Удалить пакет
+    li: a(href="/") На главную
+  p #{status}

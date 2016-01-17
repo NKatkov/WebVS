@@ -1,4 +1,4 @@
-﻿var express = require('express');
+var express = require('express');
 var router = express.Router();
 var iconv = require('iconv-lite');
 var Converter = require("csvtojson").Converter;
