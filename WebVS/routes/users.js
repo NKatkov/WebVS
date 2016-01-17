@@ -21,8 +21,6 @@ router.get('/create', function (req, res) {
     }
 });
 
-
-
 router.get('/edit', function (req, res) {
     var sess = req.session
     if (sess.user) {
@@ -47,7 +45,6 @@ router.get('/editperm', function (req, res) {
         res.redirect('/auth');
     }
 });
-
 
 router.get('/delete', function (req, res) {
     var sess = req.session
@@ -96,7 +93,5 @@ router.get('/', function (req, res) {
         res.redirect('/auth');
     }
 });
+
 module.exports = router;
-
-
-

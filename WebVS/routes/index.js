@@ -8,15 +8,11 @@ var si = require('systeminformation');
 var async = require('async');
 var io_client = require('socket.io-client');
 
-
-/* GET home page. */
 router.get('/', function (req, res) {
     var sess = req.session
-    //sess.user = 'admin'
     if (sess.user) {
         res.render('index', { title: 'Личный кабинет', User: sess.user });
     } else {
-        //res.redirect('/ajax/info');
         res.redirect('/auth');
     }
 });
@@ -37,7 +33,6 @@ router.get('/ajax/info2', function (req, res) {
         child = exec('chcp 65001 | systeminfo /FO CSV"', function (error, stdout, stderr) {
             converter.fromString(stdout, function (err, result) {
                 res.json(result);
-            //console.log(result[5])
             });
         });
 });

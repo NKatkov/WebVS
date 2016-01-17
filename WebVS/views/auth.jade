@@ -9,8 +9,7 @@ block content
         br
         input(type="password", name="pass")
         button Log in
-    p #{error}
-
+        p #{error}
 
     h2 Регистрация
     form(method="post", action="/auth/reg")
@@ -19,6 +18,3 @@ block content
         input(type="password", name="pass")
         button Зарегистрировать
         p #{status}
-
-
-
