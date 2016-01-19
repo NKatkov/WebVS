@@ -30,7 +30,7 @@ router.get('/shutdown', function (req, res) {
     if (sess.user) {
         var exec = require('child_process').exec,
             converter = new Converter({}),
-            child = exec('chcp 65001 | echo shutdown', function (error, stdout, stderr) {
+            child = exec('sudo shutdown -h now', function (error, stdout, stderr) {
                 res.render('srv', { title: 'Управление сервером ', status: stdout });
             });
     } else {
