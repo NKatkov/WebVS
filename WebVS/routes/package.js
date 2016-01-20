@@ -8,7 +8,7 @@ router.get('/', function (req, res, next) {
     if (!sess.user) {
         res.render('auth', { error: "Пользователь не авторизован" });
     } else {
-        res.render('package', { title: 'Управление пакетами ', User: sess.user });
+        res.render('package', {menu:'none', title: 'Управление пакетами ', User: sess.user });
     }
 });
 
@@ -58,15 +58,25 @@ router.get('/list', function (req, res) {
 router.get('/install', function (req, res) {
     var sess = req.session
     if (sess.user) {
+        res.render('package', {menu:'install', title: 'Управление сервером '});
+    } else {
+        res.redirect('/auth');
+    }
+});
+
+router.post('/install', function (req, res) {
+    var sess = req.session
+    if (sess.user) {
         var exec = require('child_process').exec,
             converter = new Converter({}),
-            child = exec('chcp 65001 | echo reboot', function (error, stdout, stderr) {
-                res.render('srv', { title: 'Управление сервером ', status: stdout });
+            child = exec('apt-get install ' + req.body.packname , function (error, stdout, stderr) {
+                res.render('package', {menu:'install', title: 'Управление сервером ', status: stdout });
             });
     } else {
         res.redirect('/auth');
     }
 });
+
 router.get('/update', function (req, res) {
     var sess = req.session
     if (sess.user) {
