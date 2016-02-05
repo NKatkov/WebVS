@@ -633,7 +633,7 @@ ii  mount                                2.26.2-6ubuntu3                  amd64 
 ii  mountall                             2.54ubuntu1                      amd64        filesystem mounting tool
 ii  mtr-tiny                             0.85-3                           amd64        Full screen ncurses traceroute tool
 ii  multiarch-support                    2.21-0ubuntu4                    amd64        Transitional package to ensure multiarch compatibility
-ii  nano                                 2.4.2-1ubuntu0.1                 amd64        small, friendly text editor inspired by Pico
+rc  nano                                 2.4.2-1ubuntu0.1                 amd64        small, friendly text editor inspired by Pico
 ii  ncurses-base                         5.9+20150516-2ubuntu1            all          basic terminal type definitions
 ii  ncurses-bin                          5.9+20150516-2ubuntu1            amd64        terminal-related programs and man pages
 ii  ncurses-term                         5.9+20150516-2ubuntu1            all          additional terminal type definitions

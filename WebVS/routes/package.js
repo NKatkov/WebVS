@@ -28,12 +28,13 @@ router.get('/list', function (req, res) {
 				  stream.end();
 				})
 				var str = stdout.split(/\r?\n/)
+				var n = 0
 				for(i=0;i<str.length;i++){
 					var arrMatches = str[i].match(rePattern);
-					
 					if(arrMatches){
 						//console.log(arrMatches[0])
-						list_package["Package_" + i] = {
+						n += 1
+						list_package["Package_" + n] = {
 							name : arrMatches[1],
 							version : arrMatches[2],
 							description : arrMatches[3]
@@ -58,7 +59,7 @@ router.get('/list', function (req, res) {
 router.get('/install', function (req, res) {
     var sess = req.session
     if (sess.user) {
-        res.render('package', {menu:'install', title: 'Управление сервером '});
+        res.render('package', {menu:'install', title: 'Управление сервером ',status: 'ok'});
     } else {
         res.redirect('/auth');
     }
@@ -67,47 +68,83 @@ router.get('/install', function (req, res) {
 router.post('/install', function (req, res) {
     var sess = req.session
     if (sess.user) {
+		console.log(req.body.packname)
         var exec = require('child_process').exec,
             converter = new Converter({}),
-            child = exec('apt-get install ' + req.body.packname , function (error, stdout, stderr) {
-                res.render('package', {menu:'install', title: 'Управление сервером ', status: stdout });
+            child = exec('sudo apt-get install -y  ' + req.body.packname , function (error, stdout, stderr) {
+				var str = stdout.split(/$/img)
+                res.render('package', {menu:'install', title: 'Управление сервером ', status: str, errstd:stderr  });
             });
     } else {
         res.redirect('/auth');
     }
 });
 
-router.get('/update', function (req, res) {
+router.get('/upgrade', function (req, res) {
     var sess = req.session
     if (sess.user) {
-        var exec = require('child_process').exec,
-            converter = new Converter({}),
-            child = exec('chcp 65001 | echo reboot', function (error, stdout, stderr) {
-                res.render('srv', { title: 'Управление сервером ', status: stdout });
-            });
+		res.render('package', {menu:'upgrade', title: 'Управление сервером '});
     } else {
         res.redirect('/auth');
     }
 });
+
+router.post('/upgrade', function (req, res) {
+    var sess = req.session
+    if (sess.user) {
+        var exec = require('child_process').exec,
+            converter = new Converter({}),
+            child = exec('sudo apt-get -y upgrade ' + req.body.packname, function (error, stdout, stderr) {
+				var str = stdout.split(/$/img)
+                res.render('package', {menu:'upgrade', title: 'Управление сервером ', status: str, errstd:stderr  });
+			})
+    } else {
+        res.redirect('/auth');
+    }
+});
+
 router.get('/update_all', function (req, res) {
     var sess = req.session
     if (sess.user) {
-        var exec = require('child_process').exec,
-            converter = new Converter({}),
-            child = exec('chcp 65001 | echo reboot', function (error, stdout, stderr) {
-                res.render('srv', { title: 'Управление сервером ', status: stdout });
-            });
+		res.render('package', {menu:'update_all', title: 'Управление сервером '});
     } else {
         res.redirect('/auth');
     }
 });
-router.get('/uninstall', function (req, res) {
+
+router.post('/update_all', function (req, res) {
     var sess = req.session
     if (sess.user) {
         var exec = require('child_process').exec,
             converter = new Converter({}),
-            child = exec('chcp 65001 | echo reboot', function (error, stdout, stderr) {
-                res.render('srv', { title: 'Управление сервером ', status: stdout });
+            child = exec('sudo apt-get -y update ', function (error, stdout, stderr) {
+				var str = stdout.split(/$/img)
+                res.render('package', {menu:'update_all', title: 'Управление сервером ', status: str, errstd:stderr  });
+			})
+    } else {
+        res.redirect('/auth');
+    }
+});
+
+router.get('/uninstall', function (req, res) {
+    var sess = req.session
+    if (sess.user) {
+        res.render('package', {menu:'uninstall', title: 'Управление сервером ',status: 'ok'});
+    } else {
+        res.redirect('/auth');
+    }
+});
+
+router.post('/uninstall', function (req, res) {
+    var sess = req.session
+    if (sess.user) {
+		console.log(req.body.packname)
+        var exec = require('child_process').exec,
+            converter = new Converter({}),
+            child = exec('sudo apt-get remove -y  ' + req.body.packname, function (error, stdout, stderr) {
+				var str = stdout.split(/$/img)
+
+                res.render('package', {menu:'uninstall', title: 'Управление сервером ', status: str, errstd:stderr  });
             });
     } else {
         res.redirect('/auth');

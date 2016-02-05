@@ -5,10 +5,12 @@ var db = require('../db').db;
 
 router.get('/', function (req, res) {
     var sess = req.session
-    if (sess.user) {
-        res.render('users', { title: 'Управление пользователями', User: sess.user });
+	console.log(sess.perm)
+    if (sess.user && sess.perm == 1) {
+			res.render('users', { title: 'Управление пользователями', User: sess.user});
     } else {
-        res.redirect('/auth');
+		if(sess.user){res.render('index', { title: 'Управление пользователями', User: sess.user, status: "Нету доступа"})}
+        res.redirect('/auth')
     }
 });
 
@@ -65,7 +67,8 @@ router.post('/delete', function (req, res) {
             if (user_del != null) {
                 db.collection('sessions').remove({ session: new RegExp('' + user_del._id + '', 'i') }, function (err,ress) {
                     if (err) throw err;
-                    if (ress.result.ok == 1 && ress.result.n != 0) {
+					console.log(ress.result)
+                    if (ress.result.ok == 1 && ress.result.n >= 0) {
                         if (user_del.username == req.body.username) { req.session = null }
                         User.find({}, function (err, user_list) {
                             if (err) throw err;

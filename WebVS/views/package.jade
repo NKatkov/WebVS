@@ -3,21 +3,43 @@ extends layout
 block content
 	h1= title
 	-var vis
-	-if(menu == 'install'){vis = ''}else{vis = 'none'}
-
-		
-	p Личный кабинет
+	-if(menu == 'install'){vis = ''}
+	-if(menu == 'uninstall'){vis = ''}
+	-if(menu == 'upgrade'){vis = ''}
+	-if(menu == 'update_all'){vis = ''}
+	p(id ="none") Личный кабинет
 		ul
 			li: a(href="/man/package/list") Список пакетов
 			li: a(href="/man/package/install") Установить пакет
-			li: a(href="/man/package/update") Обновить пакет
+			li: a(href="/man/package/upgrade") Обновить пакет
 			li: a(href="/man/package/update_all") Обновить все пакеты
 			li: a(href="/man/package/uninstall") Удалить пакет
 			li: a(href="/") На главную
-	form(method="post" id ="install" action="/install", style="display:none")
+	form(method="post" id ="install" action="/man/package/install", style="display:none")
 		div Имя пакета:
-		div: input(type="text", name="pack_name")
+		div: input(type="text", name="packname")
+		button Установить
+	form(method="post" id ="uninstall" action="/man/package/uninstall", style="display:none")
+		div Имя пакета:
+		div: input(type="text", name="packname")
 		button Удалить
-	p #{status}
+	form(method="post" id ="upgrade" action="/man/package/upgrade", style="display:none")
+		div Имя пакета:
+		div: input(type="text", name="packname")
+		button Upgrade
+	form(method="post" id ="update_all" action="/man/package/update_all", style="display:none")
+		button Обновить всё
+		div Может занять много времени!
+	details(open)
+		summary 'Вывод из консоли'
+		div
+			-if(status){
+			-for(i=0;i<status.length;i++){
+			-p = status[i]
+			div #{p}
+			-}}
+	details
+		summary 'Вывод из консоли Ошибку'
+		div #{errstd}
 	script.
 		document.getElementById('#{menu}').style.display = '#{vis}';

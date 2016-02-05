@@ -2,17 +2,16 @@
     crypto = require('crypto');
 
 mongoose.model('User', {
-    properties: ['name', 'hashed_password', 'salt'],
+    properties: ['username', 'hashed_password', 'salt', 'permission'],
     
     indexes: [
         [{ name: 1 }, { unique: true }]
     ],
     
     getters: {
-        id: function () {
-            return this._id.toHexString();
-        },
+        id: function () { return this._id.toHexString();},
         password: function () { return this._password; }
+        permission: function () { return this.permission; }
     },
     
     setters: {
