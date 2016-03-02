@@ -45,6 +45,30 @@ app.use(function (req, res, next) {
     next(err);
 });
 
+
+var SDTSclass = {};
+SDTSclass.hasPremiss = function (user_role,f){
+    if (user_role == 'admin') {
+
+        return true;
+    } else if(user_role=="user") {
+        if (f == 'install') {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+
+app.all('*',function (req, res, next) {
+    
+    // req.jade.defaul.std = SDTSclass;
+    // req.jade.defaul.user = req.session.user || false;
+
+    next();
+});
+
 if (app.get('env') === 'development') {
     app.use(function (err, req, res, next) {
         res.status(err.status || 500);

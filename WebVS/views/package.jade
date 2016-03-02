@@ -15,10 +15,13 @@ block content
 			li: a(href="/man/package/update_all") Обновить все пакеты
 			li: a(href="/man/package/uninstall") Удалить пакет
 			li: a(href="/") На главную
-	form(method="post" id ="install" action="/man/package/install", style="display:none")
-		div Имя пакета:
-		div: input(type="text", name="packname")
-		button Установить
+	if(menu == 'install' && std.hasPremiss(user.user_role,'install'))
+
+
+		form(method="post" id ="install" action="/man/package/install", style="display:none")
+			div Имя пакета:
+			div: input(type="text", name="packname")
+			button Установить
 	form(method="post" id ="uninstall" action="/man/package/uninstall", style="display:none")
 		div Имя пакета:
 		div: input(type="text", name="packname")
