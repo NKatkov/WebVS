@@ -20,7 +20,7 @@ var UserSchema = new Schema({
     hashedPassword: { type: String, required: true },
     salt: { type: String, required: true },
     created: { type: Date, default: Date.now },
-	permission: { type: Number,required: true , default: 2}
+    role: { type: String, required: true , default: "user" }
 });
 
 UserSchema.method({
@@ -29,37 +29,48 @@ UserSchema.method({
     },
     checkPassword: function (password) {
         return this.encryptPassword(password) === this.hashedPassword;
+    },
+     RoleCheck: function () {
+        console.log(this.role)
+        if (this.role == "admin") {
+            return true
+        } else if (this.role == "user") {
+            return false
+        }
+        return false;
     }
 })
 
 UserSchema.virtual('password')
     .set(function (password) {
-		this._plainPassword = password;
-		this.salt = Math.random() + '';
-		this.hashedPassword = this.encryptPassword(password);
-	})
-    .get(function () {return this._plainPassword;});
+    this._plainPassword = password;
+    this.salt = Math.random() + '';
+    this.hashedPassword = this.encryptPassword(password);
+})
+    .get(function () { return this._plainPassword; });
 
-UserSchema.statics.authorize = function (username, password, callback) {
-    var User = this;
-    async.waterfall([
-        function (callback) {
-            User.findOne({ username: username }, callback);
-        },
-        function (aUser, callback) {
-            if (aUser) {
-                if (aUser.checkPassword(password)) {
-                    callback(null, aUser);
+UserSchema.statics = {
+    authorize: function (username, password, callback) {
+        var User = this;
+        async.waterfall([
+            function (callback) {
+                User.findOne({ username: username }, callback);
+            },
+            function (aUser, callback) {
+                if (aUser) {
+                    if (aUser.checkPassword(password)) {
+                        callback(null, aUser);
+                    } else {
+                        callback("Логин или пароль указаны не верно!", aUser);
+                    }
                 } else {
                     callback("Логин или пароль указаны не верно!", aUser);
                 }
-            } else {
-                callback("Логин или пароль указаны не верно!", aUser);
-            }
 				
-        }
-    ], callback);
-};
+            }
+        ], callback);
+    }
+}
 
 module.exports.conn = conn;
 module.exports.db = db;

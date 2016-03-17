@@ -9,9 +9,9 @@ block content
 			td 
 				form(method="post", action="/auth/reg")
 					div Права нового пользователя:
-					div: select(id="perm", name="perm")
-						option(value="1")  Администратор
-						option(value="2")  Пользователь
+					div: select(id="role", name="perm")
+						option(value="admin")  Администратор
+						option(value="user")  Пользователь
 					div Логин:
 					div: input(type="text", name="login")
 					div Пароль:

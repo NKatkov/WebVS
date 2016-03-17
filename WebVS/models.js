@@ -2,7 +2,7 @@
     crypto = require('crypto');
 
 mongoose.model('User', {
-    properties: ['username', 'hashed_password', 'salt', 'permission'],
+    properties: ['username', 'hashed_password', 'salt', 'role'],
     
     indexes: [
         [{ name: 1 }, { unique: true }]
@@ -10,8 +10,8 @@ mongoose.model('User', {
     
     getters: {
         id: function () { return this._id.toHexString();},
-        password: function () { return this._password; }
-        permission: function () { return this.permission; }
+        password: function () { return this._password; },
+        role: function () { return this.role; }
     },
     
     setters: {
@@ -40,7 +40,7 @@ mongoose.model('User', {
             return this.name && this.name.length > 0 && this.name.length < 255 
              && this.password && this.password.length > 0 && this.password.length < 255;
         },
-        
+
         save: function (okFn, failedFn) {
             if (this.isValid()) {
                 this.__super__(okFn);

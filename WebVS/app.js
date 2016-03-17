@@ -30,6 +30,22 @@ app.use(session({
     saveUninitialized: true,
 }));
 
+app.use(function (req, res, next) {
+    res.locals = {
+        CheckRole: function (menu) {
+            console.log(req.session.role)
+            if (req.session.role == "admin") {
+                return true
+            } else if (req.session.role == "user") {
+                return false
+            }
+        },
+        Name: req.session.nick
+    };
+    next();
+});
+
+
 app.use('/', routes);
 app.use('/auth/login', routes);
 
@@ -46,28 +62,7 @@ app.use(function (req, res, next) {
 });
 
 
-var SDTSclass = {};
-SDTSclass.hasPremiss = function (user_role,f){
-    if (user_role == 'admin') {
 
-        return true;
-    } else if(user_role=="user") {
-        if (f == 'install') {
-            return true;
-        }
-    }
-    return false;
-}
-
-
-
-app.all('*',function (req, res, next) {
-    
-    // req.jade.defaul.std = SDTSclass;
-    // req.jade.defaul.user = req.session.user || false;
-
-    next();
-});
 
 if (app.get('env') === 'development') {
     app.use(function (err, req, res, next) {

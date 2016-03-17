@@ -5,12 +5,15 @@ var db = require('../db').db;
 
 router.get('/', function (req, res) {
     var sess = req.session
-	console.log(sess.perm)
-    if (sess.user && sess.perm == 1) {
+	console.log(User)
+    if (sess.user && User.RoleCheck()) {
 			res.render('users', { title: 'Управление пользователями', User: sess.user});
     } else {
-		if(sess.user){res.render('index', { title: 'Управление пользователями', User: sess.user, status: "Нету доступа"})}
-        res.redirect('/auth')
+        if (sess.user) {
+            res.render('index', { title: 'Управление пользователями', User: sess.user, status: "Нету доступа" })
+        } else {
+            res.redirect('/auth')
+        }
     }
 });
 

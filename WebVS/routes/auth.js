@@ -19,7 +19,8 @@ router.post('/login', function (req, res, next) {
                 res.render('auth', { error: err });
             } else {
                 req.session.user = User._id;
-				req.session.perm = User.permission;
+                req.session.nick = User.username;
+				req.session.role = User.role;
                 res.redirect('/');
             }
         })
@@ -37,7 +38,7 @@ router.get('/logout', function (req, res) {
 
 router.post('/reg', function (req, res, next) {
     if (req.body.login && req.body.pass) {
-        var newUser = new User({ username: req.body.login, password: req.body.pass, permission: req.body.perm})
+        var newUser = new User({ username: req.body.login, password: req.body.pass, role: req.body.role})
         newUser.save(function (err) {
             if (!err) {
                 if (req.session.user) {
