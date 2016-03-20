@@ -16,12 +16,7 @@ router.post('/login', function (req, res, next) {
             if (err) {
                 res.render('auth', { error: err });
             } else {
-                console.log(User);
-                //req.session.user = User._id;
                 req.session.user = User || false;
-
-                //req.session.nick = User.username;
-				//req.session.role = User.role;
                 res.redirect('/');
             }
         })

@@ -19,7 +19,10 @@ mongoose.model('User', {
             this._password = password;
             this.salt = this.makeSalt();
             this.hashed_password = this.encPass(password);
-        }
+        }//,
+        //role: function (role) {
+        //    this.role;
+        //}
     },
     
     methods: {

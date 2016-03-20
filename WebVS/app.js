@@ -38,8 +38,6 @@ fn.dateToStr = function (d,f) {
 
     return 'formate date';
 }
-
-
 function remoteIP(req) {
     var headers = req.headers;
     var proxy_ip = headers['x-real-ip'] || headers['x-forwarded-for']
@@ -53,18 +51,14 @@ function remoteIP(req) {
     if (req.ip)
         return req.ip;
 }
-
-
 fn.trim = function (str, charlist) {
     charlist = !charlist ? ' \\s\xA0' : charlist.replace(/([\[\]\(\)\.\?\/\*\{\}\+\$\^\:])/g, '\$1');
     var re = new RegExp('^[' + charlist + ']+|[' + charlist + ']+$', 'g');
     return str.replace(re, '');
 }
-
 fn.getRandomInt = function (min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-
 fn.toTranslit = function (text) {
     return trim(text).replace(/[/.,!?;]*/g, '').replace(/([à-ÿ¸])/gi, function (all, char) {
         var code = char.charCodeAt(0),
@@ -76,9 +70,9 @@ fn.toTranslit = function (text) {
     }).replace('?', '').replace(/ /g, '-');
 }
 
+
 app.use(function (req, res, next) {
     if (req.session.user) {
-        console.log(req.session)
         req.user = new db.User(req.session.user);
     }
     next();

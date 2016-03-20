@@ -6,6 +6,7 @@ block content
 	table
 		tr
 			td: include user_menu
+
 			if(menu == 'user_create' && app.user.IsAdmin())
 				td: form(method="post", action="/auth/reg")
 						div Права нового пользователя:
@@ -17,6 +18,7 @@ block content
 						div Пароль:
 						div: input(type="password", name="pass")
 						button Зарегистрировать
+
 			if(menu == 'user_delete' && app.user.IsAdmin())
 				td: form(action="/man/users/delete" method="post")
 					div: select(id="xxx", name="username")
@@ -25,21 +27,31 @@ block content
 						option(value="#{list}")  #{list}
 						-}
 					div: input(type="submit" value="Удалить")
+
 			if(menu == 'user_edit' && app.user.IsAdmin())
-				td: form(action="/auth/edit" method="post")
-					div: select(id="xxx", name="xxxyyy")
+				td: form(action="/man/users/edit" method="post")
+					div Выберите имя пользователя:
+					div: select(id="xxx", name="nick")
 						-for(var i = 0;i<list_user.length;i++){
 						-var list = list_user[i].username
 						option(value="#{list}")  #{list}
 						-}
+					div Новый пароль:
+					div: input(type="password", name="pass")
 					div: input(type="submit" value="Изменить")
+
 			if(menu == 'user_edit_role' && app.user.IsAdmin())
-				td: form(action="/auth/edit_perm" method="post")
-					div: select(id="xxx", name="xxxyyy")
+				td: form(action="/man/users/editperm" method="post")
+					div: select(id="xxx", name="nick")
 						-for(var i = 0;i<list_user.length;i++){
 						-var list = list_user[i].username
 						option(value="#{list}")  #{list}
 						-}
+					div Роль нового пользователя:
+					div: select(id="role", name="role")
+						option(value="admin")  Администратор
+						option(value="user")  Пользователь
+
 					div: input(type="submit" value="Изменить")
 	br
 	br

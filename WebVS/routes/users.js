@@ -58,12 +58,34 @@ router.get('/delete', function (req, res) {
     }
 });
 
-router.post('/edit', function (req, res) { 
-
+router.post('/edit', function (req, res) {
+    console.log(req.body.nick)
+    if (req.user && req.user.IsAdmin()) {
+        User.findOne({ username: req.body.nick }, function (err, mUser) {
+            if (!err) {
+                mUser.password = req.body.pass
+                mUser.save()
+                User.find({}, function (err, users) {
+                    if (err) throw err;
+                    res.render('users', { title: 'Управление правами пользователями', list_user: users, menu: 'users' , status: 'Пользователь успешно изменен' });
+                });
+            }
+        });   
+    }
 });
 
-router.post('/editperm', function (req, res) { 
-
+router.post('/editperm', function (req, res) {
+    if (req.user && req.user.IsAdmin()) {
+        User.findOne({ username: req.body.nick }, function (err, mUser) {
+            if (!err) {
+                console.log(req.body.role);
+                console.log(mUser.role);
+                mUser.role = req.body.role;
+                mUser.save();
+                res.render('users', { title: 'Управление правами пользователями', menu: 'users' , status: 'Пользователь успешно изменен' });
+            }
+        });
+    }
 });
 
 router.post('/delete', function (req, res) {
