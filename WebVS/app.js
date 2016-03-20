@@ -30,9 +30,6 @@ app.use(session({
     saveUninitialized: true,
 }));
 
-
-
-
 var fn = {};
 fn.dateToStr = function (d,f) {
 
@@ -73,17 +70,21 @@ fn.toTranslit = function (text) {
 
 app.use(function (req, res, next) {
     if (req.session.user) {
-        req.user = new db.User(req.session.user);
+        db.User.findById(req.session.user._id, function (err, user) {
+            if (user) {
+                req.session.user = req.user = user || false;
+                next();
+            }
+        });
+    } else {
+        next();
     }
-    next();
 });
 
 app.use(function (req, res, next) {
     req.remoteIP = remoteIP(req);
     next();
 });
-
-
 
 app.use(function (req, res, next) {
     res.locals = {

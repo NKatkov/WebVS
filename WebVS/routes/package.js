@@ -7,7 +7,11 @@ router.get('/', function (req, res, next) {
     if (!req.user) {
         res.render('auth', { error: "Пользователь не авторизован" });
     } else {
-        res.render('package', {menu:'none', title: 'Управление пакетами ', User: req.user });
+        if (req.user.IsAdmin()) {
+            res.render('package', { menu: 'none', title: 'Управление пакетами ', User: req.user });
+        } else {
+            res.redirect('/');
+        }
     }
 });
 

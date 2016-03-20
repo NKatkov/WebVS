@@ -78,8 +78,6 @@ router.post('/editperm', function (req, res) {
     if (req.user && req.user.IsAdmin()) {
         User.findOne({ username: req.body.nick }, function (err, mUser) {
             if (!err) {
-                console.log(req.body.role);
-                console.log(mUser.role);
                 mUser.role = req.body.role;
                 mUser.save();
                 res.render('users', { title: 'Управление правами пользователями', menu: 'users' , status: 'Пользователь успешно изменен' });
