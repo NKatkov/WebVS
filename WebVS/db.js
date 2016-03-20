@@ -30,12 +30,9 @@ UserSchema.method({
     checkPassword: function (password) {
         return this.encryptPassword(password) === this.hashedPassword;
     },
-     RoleCheck: function () {
-        console.log(this.role)
+    IsAdmin: function () {
         if (this.role == "admin") {
             return true
-        } else if (this.role == "user") {
-            return false
         }
         return false;
     }

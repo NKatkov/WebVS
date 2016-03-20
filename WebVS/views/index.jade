@@ -1,21 +1,24 @@
 ﻿extends layout
 
 block content
-  h1 Главная страница
-  p #{title}
-  ul
-    li: a(href="/ajax/info") Информация о сервере
-    li: a(href="/man/srv") Управление Сервером 
-    li: a(href="/man/package") Управление пакетами 
-    li: a(href="/man/users") Управление пользователями 
-    li Управление приложениями Nodejs
-    li Управление пакетами npm
-    li Мониторинг системы
-    li Управление базами данных
-    li: a(href="/test") Test
-  p #{status}
-  br
-  br
-  br
-  br
-  a(href="/auth/logout") Сменить пользователя 
+	h1 Главная страница
+	p #{title}
+	ul
+		li: a(href="/ajax/info") Информация о сервере
+		if(app.user.IsAdmin())
+			li: a(href="/man/srv") Управление Сервером 
+		if(app.user.IsAdmin())
+			li: a(href="/man/package") Управление пакетами 
+		if(app.user.IsAdmin())
+			li: a(href="/man/users") Управление пользователями 
+		li Управление приложениями Nodejs
+		li Управление пакетами npm
+		li Мониторинг системы
+		li Управление базами данных
+		li: a(href="/test") Test
+	p #{status}
+	br
+	br
+	br
+	br
+	a(href="/auth/logout") Сменить пользователя 

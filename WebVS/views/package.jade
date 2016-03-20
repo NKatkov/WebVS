@@ -14,25 +14,26 @@ block content
 					li: a(href="/man/package/uninstall") Удалить пакет
 					li: a(href="/") На главную
 			td
-				if(menu == 'install' && CheckRole(menu))
+				if(menu == 'install' && app.user.IsAdmin())
 					form(method="post" id ="install" action="/man/package/install")
 						div Имя пакета:
 						div: input(type="text", name="packname")
 						button Установить
-				if(menu == 'uninstall' && CheckRole(menu))
+				if(menu == 'uninstall' && app.user.IsAdmin())
 					form(method="post" id ="uninstall" action="/man/package/uninstall")
 						div Имя пакета:
 						div: input(type="text", name="packname")
 						button Удалить
-				if(menu == 'upgrade' && CheckRole(menu))
+				if(menu == 'upgrade' && app.user.IsAdmin())
 					form(method="post" id ="upgrade" action="/man/package/upgrade")
 						div Имя пакета:
 						div: input(type="text", name="packname")
 						button Upgrade
-				if(menu == 'update_all' && CheckRole(menu))
+				if(menu == 'update_all' && app.user.IsAdmin())
 					form(method="post" id ="update_all" action="/man/package/update_all")
 						button Обновить всё
-						div Может занять много времени!
+						div Может занять много времени!   
+						div #{app.fn.dateFormat(d,'dd.mm.yy hh:mm:ss')}
 	details(open)
 		summary 'Вывод из консоли'
 		div

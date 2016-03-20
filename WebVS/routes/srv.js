@@ -4,17 +4,15 @@ var Converter = require("csvtojson").Converter;
 var User = require('../db').User;
 
 router.get('/', function (req, res, next) {
-    var sess = req.session
-    if (!sess.user) {
-        res.render('auth', { error: "Пользователь не авторизован" });
+    if (req.user) {
+        res.render('srv', { title: 'Управление сервером ', User: req.user });
     } else {
-        res.render('srv', { title: 'Управление сервером ', User: sess.user });
+        res.render('auth', { error: "Пользователь не авторизован" });
     }
 });
 
 router.get('/reboot', function (req, res) {
-    var sess = req.session
-    if (sess.user) {
+    if (req.user && req.user.IsAdmin()) {
         var exec = require('child_process').exec,
             converter = new Converter({}),
             child = exec('chcp 65001 | echo reboot', function (error, stdout, stderr) {
@@ -26,8 +24,7 @@ router.get('/reboot', function (req, res) {
 });
 
 router.get('/shutdown', function (req, res) {
-    var sess = req.session
-    if (sess.user) {
+    if (req.user && req.user.IsAdmin()) {
         var exec = require('child_process').exec,
             converter = new Converter({}),
             child = exec('sudo shutdown -h now', function (error, stdout, stderr) {

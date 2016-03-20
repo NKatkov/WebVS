@@ -9,18 +9,19 @@ var async = require('async');
 var io_client = require('socket.io-client');
 
 router.get('/', function (req, res) {
-    var sess = req.session
-    if (sess.user) {
-        res.render('index', { title: 'Личный кабинет', User: sess.user });
+    if (req.user) {
+        res.render('index', { title: 'Личный кабинет', User: req.user });
     } else {
         res.redirect('/auth');
     }
 });
 
 router.get('/ajax/info', function (req, res) {
-    getInfo(null, function (err, str) {
-        res.json(str);
-    })
+    if (req.user) {
+        getInfo(null, function (err, str) {
+            res.json(str);
+        })
+    }
 });
 
 router.get('/test', function (req, ress) {
@@ -28,13 +29,15 @@ router.get('/test', function (req, ress) {
 });
 
 router.get('/ajax/info2', function (req, res) {
-    var exec = require('child_process').exec,
-        converter = new Converter({}),
-        child = exec('chcp 65001 | systeminfo /FO CSV"', function (error, stdout, stderr) {
-            converter.fromString(stdout, function (err, result) {
-                res.json(result);
+    if (req.user) {
+        var exec = require('child_process').exec,
+            converter = new Converter({}),
+            child = exec('chcp 65001 | systeminfo /FO CSV"', function (error, stdout, stderr) {
+                converter.fromString(stdout, function (err, result) {
+                    res.json(result);
+                });
             });
-        });
+    }
 });
 
 function getInfo(result, onComplete) {

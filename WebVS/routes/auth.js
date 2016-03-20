@@ -3,9 +3,7 @@ var router = express.Router();
 var User = require('../db').User;
 
 router.get('/', function (req, res, next) {
-    var sess = req.session
-    
-    if (!sess.user) {
+    if (!req.user) {
         res.render('auth', { error: "Пользователь не авторизован" });
     } else {
         res.redirect('/');
@@ -18,9 +16,12 @@ router.post('/login', function (req, res, next) {
             if (err) {
                 res.render('auth', { error: err });
             } else {
-                req.session.user = User._id;
-                req.session.nick = User.username;
-				req.session.role = User.role;
+                console.log(User);
+                //req.session.user = User._id;
+                req.session.user = User || false;
+
+                //req.session.nick = User.username;
+				//req.session.role = User.role;
                 res.redirect('/');
             }
         })
@@ -38,16 +39,16 @@ router.get('/logout', function (req, res) {
 
 router.post('/reg', function (req, res, next) {
     if (req.body.login && req.body.pass) {
-        var newUser = new User({ username: req.body.login, password: req.body.pass, role: req.body.role})
+        var newUser = new User({ username: req.body.login, password: req.body.pass, role: req.body.role })
         newUser.save(function (err) {
             if (!err) {
                 if (req.session.user) {
-                    res.render('user_menu_create', { title: 'Управление пользователями', status: "Пользователь " + req.body.login + " успешно зарегистрирован" });
+                    res.render('users', { title: 'Управление пользователями', status: "Пользователь " + req.body.login + " успешно зарегистрирован" });
                 } else {
                     res.render('auth', { title: 'Управление пользователями', status: "Пользователь " + req.body.login + " успешно зарегистрирован" });
                 }
             } else {
-                res.render('user_menu_create', { title: 'Управление пользователями', status: "Error:reg(newUser.save)" });
+                res.render('users', { title: 'Управление пользователями', status: "Error:reg(newUser.save)" });
             }
         });
         return

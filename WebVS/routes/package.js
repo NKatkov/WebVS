@@ -4,17 +4,15 @@ var User = require('../db').User;
 var Converter = require("csvtojson").Converter;
 
 router.get('/', function (req, res, next) {
-    var sess = req.session
-    if (!sess.user) {
+    if (!req.user) {
         res.render('auth', { error: "Пользователь не авторизован" });
     } else {
-        res.render('package', {menu:'none', title: 'Управление пакетами ', User: sess.user });
+        res.render('package', {menu:'none', title: 'Управление пакетами ', User: req.user });
     }
 });
 
 router.get('/list', function (req, res) {
-    var sess = req.session
-    if (sess.user) {
+    if (!req.user) {
         var exec = require('child_process').exec,
             converter = new Converter({}),
             child = exec('dpkg --list', function (error, stdout, stderr) {
@@ -57,8 +55,7 @@ router.get('/list', function (req, res) {
 });
 
 router.get('/install', function (req, res) {
-    var sess = req.session
-    if (sess.user) {
+    if (req.user && req.user.IsAdmin()) {
         res.render('package', {menu:'install', title: 'Управление сервером ',status: 'ok'});
     } else {
         res.redirect('/auth');
@@ -66,8 +63,7 @@ router.get('/install', function (req, res) {
 });
 
 router.post('/install', function (req, res) {
-    var sess = req.session
-    if (sess.user) {
+    if (req.user && req.user.IsAdmin()) {
 		console.log(req.body.packname)
         var exec = require('child_process').exec,
             converter = new Converter({}),
@@ -81,8 +77,7 @@ router.post('/install', function (req, res) {
 });
 
 router.get('/upgrade', function (req, res) {
-    var sess = req.session
-    if (sess.user) {
+    if (req.user && req.user.IsAdmin()) {
 		res.render('package', {menu:'upgrade', title: 'Управление сервером '});
     } else {
         res.redirect('/auth');
@@ -90,8 +85,7 @@ router.get('/upgrade', function (req, res) {
 });
 
 router.post('/upgrade', function (req, res) {
-    var sess = req.session
-    if (sess.user) {
+    if (req.user && req.user.IsAdmin()) {
         var exec = require('child_process').exec,
             converter = new Converter({}),
             child = exec('sudo apt-get -y upgrade ' + req.body.packname, function (error, stdout, stderr) {
@@ -104,8 +98,7 @@ router.post('/upgrade', function (req, res) {
 });
 
 router.get('/update_all', function (req, res) {
-    var sess = req.session
-    if (sess.user) {
+    if (req.user && req.user.IsAdmin()) {
 		res.render('package', {menu:'update_all', title: 'Управление сервером '});
     } else {
         res.redirect('/auth');
@@ -113,8 +106,7 @@ router.get('/update_all', function (req, res) {
 });
 
 router.post('/update_all', function (req, res) {
-    var sess = req.session
-    if (sess.user) {
+    if (req.user && req.user.IsAdmin()) {
         var exec = require('child_process').exec,
             converter = new Converter({}),
             child = exec('sudo apt-get -y update ', function (error, stdout, stderr) {
@@ -127,8 +119,7 @@ router.post('/update_all', function (req, res) {
 });
 
 router.get('/uninstall', function (req, res) {
-    var sess = req.session
-    if (sess.user) {
+    if (req.user && req.user.IsAdmin()) {
         res.render('package', {menu:'uninstall', title: 'Управление сервером ',status: 'ok'});
     } else {
         res.redirect('/auth');
@@ -136,8 +127,7 @@ router.get('/uninstall', function (req, res) {
 });
 
 router.post('/uninstall', function (req, res) {
-    var sess = req.session
-    if (sess.user) {
+    if (req.user && req.user.IsAdmin()) {
 		console.log(req.body.packname)
         var exec = require('child_process').exec,
             converter = new Converter({}),
