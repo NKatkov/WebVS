@@ -52,18 +52,14 @@ mongoose.model('User', {
 });
 
 mongoose.model('Application', {
-    properties: ['AppName', 'Path', 'StartupFile', 'Status'],
+    properties: ['AppName', '_salt'],
     
     indexes: [
         [{ Port: 9000 }, { unique: true }]
     ],
-
-    getters: {
-        //id: function () { return this._id.toHexString(); },
-    },
     
     setters: { },
-    
+    getters: { },
     methods: { }
 });
 

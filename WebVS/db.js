@@ -73,14 +73,11 @@ var AppSchema = new Schema({
     AppName: { type: String, required: true },
     UserOwner: { type: String, required: true },
     IP: { type: String, required: true },
-	Port: { type: Number, index: { unique: true } }, 
-    Status: { type: String, required: true }, 
+    Port: { type: Number, index: { unique: true } },
+    Status: { type: String, default:"Offline", required: true, get: function (v) { return 'Online'; } },
     Path: { type: String, required: true },
     StartupFile: { type: String, required: true },
 });
-
-app_list.status = 'Online;'
-
 
 module.exports.conn = conn;
 module.exports.db = db;

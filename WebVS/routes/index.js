@@ -32,13 +32,15 @@ router.get('/test', function (req, res, next) {
             UserOwner: 'admin',
             IP: '127.0.0.1',
             Path: './users/xklx/',
-            StartupFile: 'app.js'
+            StartupFile: 'app.js',
+            _salt:''
         })
 
         db.Application.count({}, function (err, result) {
             console.log(result)
             newApp.Port = 9000 + result;
             newApp.save({}, function (err) {
+                console.log('Error: ' + err)
                 res.render('index', { title: 'Личный кабинет', status: newApp });
             });
         })
