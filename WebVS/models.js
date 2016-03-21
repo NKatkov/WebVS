@@ -19,10 +19,7 @@ mongoose.model('User', {
             this._password = password;
             this.salt = this.makeSalt();
             this.hashed_password = this.encPass(password);
-        }//,
-        //role: function (role) {
-        //    this.role;
-        //}
+        }
     },
     
     methods: {
@@ -53,6 +50,26 @@ mongoose.model('User', {
         }
     }
 });
+
+mongoose.model('Application', {
+    properties: ['AppName', 'Path', 'StartupFile', 'Status'],
+    
+    indexes: [
+        [{ Port: 9000 }, { unique: true }]
+    ],
+
+    getters: {
+        //id: function () { return this._id.toHexString(); },
+    },
+    
+    setters: { },
+    
+    methods: { }
+});
+
+exports.Application = function (db) {
+    return db.model('Application');
+};
 
 exports.User = function (db) {
     return db.model('User');

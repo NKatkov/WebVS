@@ -7,6 +7,7 @@ var exec = require('child_process').exec;
 var si = require('systeminformation');
 var async = require('async');
 var io_client = require('socket.io-client');
+var db = require('../db')
 
 router.get('/', function (req, res) {
     if (req.user) {
@@ -24,8 +25,33 @@ router.get('/ajax/info', function (req, res) {
     }
 });
 
-router.get('/test', function (req, ress) {
+router.get('/test', function (req, res, next) {
+    if (req.user) {
+        var newApp = new db.Application({
+            AppName: 'Test',
+            UserOwner: 'admin',
+            IP: '127.0.0.1',
+            Path: './users/xklx/',
+            StartupFile: 'app.js'
+        })
 
+        db.Application.count({}, function (err, result) {
+            console.log(result)
+            newApp.Port = 9000 + result;
+            newApp.save({}, function (err) {
+                res.render('index', { title: 'Личный кабинет', status: newApp });
+            });
+        })
+        
+        /*
+        var spawn = require('child_process').spawn,
+            child = spawn('node', ['./users/xklx/app.js']);
+        console.log(child.pid);
+        child.stdout.on('data', function (data) {
+            res.render('index', { title: 'Личный кабинет', status: data });
+        });
+         */
+    }
 });
 
 router.get('/ajax/info2', function (req, res) {

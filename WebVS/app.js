@@ -101,6 +101,7 @@ app.use('/', routes);
 app.use('/auth/login', routes);
 
 app.use('/auth', auth);
+app.use('/app', require('./routes/apps'));
 app.use('/man/srv', require('./routes/srv'));
 app.use('/man/users', require('./routes/users'));
 app.use('/man/package', require('./routes/package'));

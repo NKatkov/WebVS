@@ -69,6 +69,17 @@ UserSchema.statics = {
     }
 }
 
+var AppSchema = new Schema({
+    AppName: { type: String, required: true },
+    UserOwner: { type: String, required: true },
+    IP: { type: String, required: true },
+    Port: { type: Number, index: { unique: true } }, 
+    Path: { type: String, required: true },
+    StartupFile: { type: String, required: true },
+});
+
+
 module.exports.conn = conn;
 module.exports.db = db;
 module.exports.User = mongoose.model("User", UserSchema);
+module.exports.Application = mongoose.model("Application", AppSchema);

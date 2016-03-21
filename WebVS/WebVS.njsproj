@@ -37,6 +37,7 @@
     <Compile Include="db.js" />
     <Compile Include="node_modules\diskinfo\lib\diskinfo.js" />
     <Compile Include="node_modules\diskinfo\test\test.js" />
+    <Compile Include="routes\apps.js" />
     <Compile Include="routes\index.js" />
     <Compile Include="routes\auth.js" />
     <Compile Include="models.js" />
@@ -50,6 +51,7 @@
     <Content Include="public\stylesheets\style.styl" />
     <Content Include="README.md" />
     <Content Include="task.txt" />
+    <Content Include="views\apps.jade" />
     <Content Include="views\user_menu.jade" />
     <Content Include="views\users.jade" />
     <Content Include="views\index.jade" />
