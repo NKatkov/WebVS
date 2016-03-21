@@ -40,10 +40,10 @@ UserSchema.method({
 
 UserSchema.virtual('password')
     .set(function (password) {
-    this._plainPassword = password;
-    this.salt = Math.random() + '';
-    this.hashedPassword = this.encryptPassword(password);
-})
+		this._plainPassword = password;
+		this.salt = Math.random() + '';
+		this.hashedPassword = this.encryptPassword(password);
+	})
     .get(function () { return this._plainPassword; });
 
 UserSchema.statics = {
@@ -73,10 +73,13 @@ var AppSchema = new Schema({
     AppName: { type: String, required: true },
     UserOwner: { type: String, required: true },
     IP: { type: String, required: true },
-    Port: { type: Number, index: { unique: true } }, 
+	Port: { type: Number, index: { unique: true } }, 
+    Status: { type: String, required: true }, 
     Path: { type: String, required: true },
     StartupFile: { type: String, required: true },
 });
+
+app_list.status = 'Online;'
 
 
 module.exports.conn = conn;

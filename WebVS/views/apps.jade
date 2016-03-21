@@ -11,7 +11,7 @@ block content
 					li: a(href="/app/install") Добавить новое приложение
 					li: a(href="/") На главную
 			td
-				table(align='left', border='1', cellpadding='1', cellspacing='1', style='width: 600px')
+				table(align='center', border='1', cellpadding='1', cellspacing='1', style='width: auto')
 						tbody
 							tr
 								td п/п
@@ -19,11 +19,15 @@ block content
 								td Ip-адрес
 								td Порт
 								td Статус
-							tr
-								td  
-								td  
-								td  
-								td  
-								td  
-								td  
-								td  
+								-var i = 0
+								each key in List   
+									tr
+										td !{i++}
+										td !{key.AppName}
+										td !{key.IP}
+										td !{key.Port}
+										td !{key.Status}
+										td Включить
+										td Изменить
+										td Удалить
+	p #{List}
