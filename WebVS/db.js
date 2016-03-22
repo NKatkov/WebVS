@@ -3,6 +3,7 @@
     async = require('async'),
     Schema = mongoose.Schema,
     util = require("util");
+var net = require('net');
 
 var conn = mongoose.connect('mongodb://nhost.cloudapp.net:27017/WebVS');
 var db = mongoose.connection;
@@ -69,12 +70,36 @@ UserSchema.statics = {
     }
 }
 
+
+
+
 var AppSchema = new Schema({
     AppName: { type: String, required: true },
     UserOwner: { type: String, required: true },
     IP: { type: String, required: true },
     Port: { type: Number, index: { unique: true } },
-    Status: { type: String, default:"Offline", required: true, get: function (v) { return 'Offline'; } },
+    Status: {
+        type: String, default: "Offline2", required: true, 
+        get: function () {
+
+            console.log('Error: ' + this.Port);
+            var client = net.connect({ port: this.Port }, function () {
+                console.log('client');
+            })
+            .on('error', function (){
+                console.log('error');
+                
+            })
+            .on('data', function () {
+                console.log('data');           
+            })
+            .on('connect', function () {
+                console.log('connect');           
+            });
+            console.log(client.on('error', function () { }));
+            return client.res;
+        }
+    },
     Path: { type: String, required: true },
     StartupFile: { type: String, required: true },
 });
