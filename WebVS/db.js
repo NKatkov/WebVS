@@ -82,7 +82,7 @@ var AppSchema = new Schema({
         type: String, default: "Offline2", required: true, 
         get: function () {
 
-            console.log('Error: ' + this.Port);
+            console.log('Error: ' + this);
             var client = net.connect({ port: this.Port }, function () {
                 console.log('client');
             })
@@ -96,7 +96,7 @@ var AppSchema = new Schema({
             .on('connect', function () {
                 console.log('connect');           
             });
-            console.log(client.on('error', function () { }));
+            console.log(client.socket);
             return client.res;
         }
     },
