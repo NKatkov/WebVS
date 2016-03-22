@@ -9,6 +9,8 @@ block content
 				ul
 					li: a(href="/app") Мои приложения
 					li: a(href="/app/install") Добавить новое приложение
+					li: a(href="/app/add_ports") Заполнить таблицу портов
+					li: a(href="/app/ports") Добавить новое приложение
 					li: a(href="/") На главную
 			td
 				table(align='center', border='1', cellpadding='1', cellspacing='1', style='width: auto')
@@ -19,7 +21,7 @@ block content
 								td Ip-адрес
 								td Порт
 								td Статус
-								-var i = 0
+								-var i = 0,key
 								each key in List   
 									tr
 										td !{i++}
@@ -27,8 +29,10 @@ block content
 										td !{key.IP}
 										td !{key.Port}
 										td !{key.Status}
-										td Включить
-										td Изменить
-										td
-											a(href='/app/' + key._id + '/del') Удалить 
+										if( key.Status == 'Online')
+											td: a(href='/app/' + key._id + '/disable') Выключить 
+										else
+											td: a(href='/app/' + key._id + '/enable') Включить 
+										td: a(href='/app/' + key._id + '/edit') Изменить 
+										td: a(href='/app/' + key._id + '/del') Удалить 
 	p #{List}

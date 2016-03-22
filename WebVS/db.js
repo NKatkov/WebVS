@@ -74,12 +74,18 @@ var AppSchema = new Schema({
     UserOwner: { type: String, required: true },
     IP: { type: String, required: true },
     Port: { type: Number, index: { unique: true } },
-    Status: { type: String, default:"Offline", required: true, get: function (v) { return 'Online'; } },
+    Status: { type: String, default:"Offline", required: true, get: function (v) { return 'Offline'; } },
     Path: { type: String, required: true },
     StartupFile: { type: String, required: true },
 });
 
+var PortSchema = new Schema({
+	Port: { type: Number, required: true},
+	Created: { type: Date, default: Date.now }
+});
+
 module.exports.conn = conn;
 module.exports.db = db;
+module.exports.Ports = mongoose.model("Ports", PortSchema);
 module.exports.User = mongoose.model("User", UserSchema);
 module.exports.Application = mongoose.model("Application", AppSchema);
