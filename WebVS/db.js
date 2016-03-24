@@ -4,14 +4,15 @@
     Schema = mongoose.Schema,
     util = require("util");
 var net = require('net');
+var running = require('is-running')
 
-var conn = mongoose.connect('mongodb://nhost.cloudapp.net:27017/WebVS');
+//var conn = mongoose.connect('mongodb://nhost.cloudapp.net:27017/WebVS');
 var db = mongoose.connection;
-db.on('error', function (error) {
-    console.error.bind(console, 'connection error:');
-    mongoose.connect('mongodb://127.0.0.1:27017/WebVS');
-});
-
+//db.on('error', function (error) {
+    //console.error.bind(console, 'connection error:');
+var conn = mongoose.connect('mongodb://127.0.0.1:27017/WebVS');
+//});
+//
 db.once('open', function callback() {
     console.log('Successfully connected!');
 });
@@ -77,27 +78,16 @@ var AppSchema = new Schema({
     AppName: { type: String, required: true },
     UserOwner: { type: String, required: true },
     IP: { type: String, required: true },
-    Port: { type: Number, index: { unique: true } },
+	Port: { type: Number, index: { unique: true } },
+    PID: { type: Number},
     Status: {
-        type: String, default: "Offline2", required: true, 
-        get: function () {
-
-            console.log('Error: ' + this);
-            var client = net.connect({ port: this.Port }, function () {
-                console.log('client');
-            })
-            .on('error', function (){
-                console.log('error');
-                
-            })
-            .on('data', function () {
-                console.log('data');           
-            })
-            .on('connect', function () {
-                console.log('connect');           
-            });
-            console.log(client.socket);
-            return client.res;
+        type: String, default: "Offline", required: true, 
+		get: function () {
+			if (running(this.PID)) {
+				return "Online"
+			} else {
+				return "Offline"
+			}
         }
     },
     Path: { type: String, required: true },

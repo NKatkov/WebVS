@@ -32,8 +32,9 @@ router.get('/install', function (req, res) {
 	if (req.user) {
 		var newApp = new Application({
 			AppName: 'Test',
-			UserOwner: 'admin',
+			UserOwner: req.user.username,
 			IP: '127.0.0.1',
+			PID: '',
 			Path: './users/xklx/',
 			StartupFile: 'app.js',
 		})
@@ -41,6 +42,7 @@ router.get('/install', function (req, res) {
 		Ports.findOneAndRemove({}, function (err, result) { 
 			console.log(result)
 			newApp.Port = result.Port
+			//newApp.Port = "8081"
 			newApp.save({}, function (err) {
 				console.log('Error: ' + err)
 				res.redirect('/app');
@@ -70,6 +72,40 @@ router.get('/:id/del', function (req, res) {
 				
 			}
 		});
+	} else {
+		res.redirect('/auth');
+	}
+});
+
+router.get('/:id/enable', function (req, res) {
+	if (req.user) {
+		Application.findOne({ _id: req.params.id }, function (err, app) {
+			var spawn = require('child_process').spawn,
+				child = spawn('node', [app.Path + app.StartupFile, , '8081']);
+			child.stdout.on('data', function (data) {
+				app.PID = child.pid
+				app.save({}, function (err) {
+					console.log('Error: ' + err)
+					console.log('app: ' + app)
+				})
+				Application.find({ UserOwner: req.user.username }, function (err, app_list) {
+					res.render('apps', { title: 'Личный кабинет', List: app_list, status: data  });
+				});
+			});
+		})
+	} else {
+		res.redirect('/auth');
+	}
+});
+
+router.get('/:id/disable', function (req, res) {
+	if (req.user) {
+		Application.findOne({ _id: req.params.id }, function (err, app) {
+			process.kill(app.PID, signal = 'SIGTERM')
+			Application.find({ UserOwner: req.user.username }, function (err, app_list) {
+				res.render('apps', { title: 'Личный кабинет', List: app_list});
+			});
+		})
 	} else {
 		res.redirect('/auth');
 	}

@@ -32,19 +32,18 @@ router.get('/test', function (req, res, next) {
             UserOwner: 'admin',
             IP: '127.0.0.1',
             Path: './users/xklx/',
-            StartupFile: 'app.js',
-            _salt: '',
-            Port: 8081
+            StartupFile: 'app.js'
         })
-
-            //newApp.save({}, function (err) {
-            //    console.log('Error: ' + err)
-                //res.render('index', { title: 'Личный кабинет', status: newApp });
-            //});
-        
+			/*
+            newApp.save({}, function (err) {
+                console.log('Error: ' + err)
+                res.render('index', { title: 'Личный кабинет', status: newApp });
+            });
+			*/
         
         var spawn = require('child_process').spawn,
-            child = spawn('node', ['./users/xklx/app.js']);
+			child = spawn('node', ['./users/xklx/app.js']);
+
             console.log(child.pid);
             child.stdout.on('data', function (data) {
             res.render('index', { title: 'Личный кабинет', status: data });
