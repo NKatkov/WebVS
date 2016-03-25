@@ -42,7 +42,7 @@ router.get('/install', function (req, res) {
 		Ports.findOneAndRemove({}, function (err, result) { 
 			console.log(result)
 			newApp.Port = result.Port
-			newApp.Port = "8081"
+			//newApp.Port = "8081"
 			newApp.save({}, function (err) {
 				console.log('Error: ' + err)
 				res.redirect('/app');

@@ -6,12 +6,12 @@
 var net = require('net');
 var running = require('is-running')
 
-//var conn = mongoose.connect('mongodb://nhost.cloudapp.net:27017/WebVS');
+var conn = mongoose.connect('mongodb://nhost.cloudapp.net:27017/WebVS');
 var db = mongoose.connection;
-//db.on('error', function (error) {
-    //console.error.bind(console, 'connection error:');
+db.on('error', function (error) {
+    console.error.bind(console, 'connection error:');
 var conn = mongoose.connect('mongodb://127.0.0.1:27017/WebVS');
-//});
+});
 //
 db.once('open', function callback() {
     console.log('Successfully connected!');
