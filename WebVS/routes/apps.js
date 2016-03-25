@@ -42,7 +42,7 @@ router.get('/install', function (req, res) {
 		Ports.findOneAndRemove({}, function (err, result) { 
 			console.log(result)
 			newApp.Port = result.Port
-			//newApp.Port = "8081"
+			newApp.Port = "8081"
 			newApp.save({}, function (err) {
 				console.log('Error: ' + err)
 				res.redirect('/app');
@@ -80,8 +80,8 @@ router.get('/:id/del', function (req, res) {
 router.get('/:id/enable', function (req, res) {
 	if (req.user) {
 		Application.findOne({ _id: req.params.id }, function (err, app) {
-			var spawn = require('child_process').spawn,
-				child = spawn('node', [app.Path + app.StartupFile, , '8081']);
+			var exec = require('child_process').exec,
+				child = exec('node ' + app.Path + app.StartupFile + ' ' + app.Port);
 			child.stdout.on('data', function (data) {
 				app.PID = child.pid
 				app.save({}, function (err) {
