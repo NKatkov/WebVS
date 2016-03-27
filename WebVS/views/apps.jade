@@ -13,26 +13,32 @@ block content
 					li: a(href="/app/ports") Добавить новое приложение
 					li: a(href="/") На главную
 			td
-				table(align='center', border='1', cellpadding='1', cellspacing='1', style='width: auto')
-						tbody
-							tr
-								td п/п
-								td Название
-								td Ip-адрес
-								td Порт
-								td Статус
-								-var i = 0,key
-								each key in List   
-									tr
-										td !{i++}
-										td !{key.AppName}
-										td !{key.IP}
-										td !{key.Port}
-										td !{key.Status}
-										if( key.Status == 'Online')
-											td: a(href='/app/' + key._id + '/disable') Выключить 
-										else
-											td: a(href='/app/' + key._id + '/enable') Включить 
-										td: a(href='/app/' + key._id + '/edit') Изменить 
-										td: a(href='/app/' + key._id + '/del') Удалить 
+	table.table
+		thead
+			tr
+				th №
+				th Название
+				th Порт
+				th Статус
+				th.ctext(width="214") Действие
+		tbody
+			- var i = 1,key
+			each key in List   
+				tr
+					td #{i++}
+					td #{key.AppName}
+						br 
+						| (#{key.IP})
+					td #{key.Port}
+					td #{key.Status}
+					td
+						if( key.Status == 'Online')
+							a(href='/app/#{key._id}/disable').btn.btn-xs.btn-info Выключить 
+						else
+							a(href='/app/#{key._id}/enable').btn.btn-xs.btn-info Включить 
+						| 
+						a(href='/app/#{key._id}/edit').btn.btn-xs.btn-info Изменить 
+						| 
+						a(href='/app/#{key._id}/del').btn.btn-xs.btn-danger
+							i.glyphicon.glyphicon-remove
 	p #{List}

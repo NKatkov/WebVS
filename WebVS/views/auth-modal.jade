@@ -1,0 +1,51 @@
+
+#modalLogin.modal(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
+	.modal-dialog(role='document')
+		.modal-content
+			.modal-header(style="border:0;")
+				button.close(type='button', data-dismiss='modal', aria-label='Close')
+					span(aria-hidden='true') ×
+				ul.nav.nav-tabs(role='tablist')
+					li.active(role='presentation')
+						a(href='#auth-modal-login', aria-controls='home', role='tab', data-toggle='tab') Войти   
+					li(role='presentation')
+						a(href='#auth-modal-reg', aria-controls='profile', role='tab', data-toggle='tab') Регистрация    
+			.modal-body
+				.tab-content
+					#auth-modal-login.tab-pane.active(role='tabpanel')
+						p #{message}
+						form(method="post",action="/auth/login")
+							if (error)
+								.alert.alert-danger #{error}
+							.form-group
+								label(for="aModalLogLogin") Логин
+								input(type="text", name="login").form-control#aModalLogLogin
+							.form-group
+								label(for="aModalLogPwd") Паорль:
+								input(type="password", name="pass").form-control#aModalLogPwd
+							.modal-footer
+								button.btn.btn-default(type='button', data-dismiss='modal') Закрыть
+								button.btn.btn-primary Войти
+					#auth-modal-reg.tab-pane(role='tabpanel')
+						p
+						form(method="post", action="/auth/reg")
+							.form-group
+								label(for="aModalRegRole") Права нового пользователя:
+								select(name="role").form-control#aModalRegRole
+									option(value="admin")  Администратор
+									option(value="user")  Пользователь
+							.form-group
+								label(for="aModalRegLogin") Логин:
+								input(type="text", name="login").form-control#aModalRegLogin
+							.form-group
+								label(for="aModalRegPwd") Пароль:
+								input(type="password", name="pass").form-control#aModalRegPwd
+							p #{status}  	
+				
+							.modal-footer
+								button.btn.btn-default(type='button', data-dismiss='modal') Закрыть
+								button.btn.btn-primary Зарегистрировать
+				
+
+
+

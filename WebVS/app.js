@@ -4,10 +4,8 @@ var express = require('express'),
     logger = require('morgan'),
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser'),
-    routes = require('./routes/index'),
     session = require('express-session'),
     MongoStore = require('connect-mongo')(session),
-    auth = require('./routes/auth'),
     db = require('./db'),
     app = express();
 
@@ -30,105 +28,10 @@ app.use(session({
     saveUninitialized: true,
 }));
 
-var fn = {};
-fn.dateToStr = function (d,f) {
 
-    return 'formate date';
-}
-function remoteIP(req) {
-    var headers = req.headers;
-    var proxy_ip = headers['x-real-ip'] || headers['x-forwarded-for']
-    if (proxy_ip)
-        return proxy_ip;
-    if (req.connection) {
-        if (req.connection.remoteAddress)
-            return req.connection.remoteAddress.replace('::ffff:', '');
-    }
-    
-    if (req.ip)
-        return req.ip;
-}
-fn.trim = function (str, charlist) {
-    charlist = !charlist ? ' \\s\xA0' : charlist.replace(/([\[\]\(\)\.\?\/\*\{\}\+\$\^\:])/g, '\$1');
-    var re = new RegExp('^[' + charlist + ']+|[' + charlist + ']+$', 'g');
-    return str.replace(re, '');
-}
-fn.getRandomInt = function (min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-fn.toTranslit = function (text) {
-    return trim(text).replace(/[/.,!?;]*/g, '').replace(/([à-ÿ¸])/gi, function (all, char) {
-        var code = char.charCodeAt(0),
-            index = code == 1025 || code == 1105 ? 0 : code > 1071 ? code - 1071 : code - 1039,
-            t = ['yo', 'a', 'b', 'v', 'g', 'd', 'e', 'zh', 'z', 'i', 'y', 'k', 'l', 'm', 'n', 'o', 'p',
-                'r', 's', 't', 'u', 'f', 'h', 'c', 'ch', 'sh', 'shch', '', 'y', '', 'e', 'yu', 'ya'];
-        
-        return char.toLowerCase() === char ? t[ index ].toLowerCase() : t[ index ];
-    }).replace('?', '').replace(/ /g, '-');
-}
+require('./boot/index')(app);
 
 
-app.use(function (req, res, next) {
-    if (req.session.user) {
-        db.User.findById(req.session.user._id, function (err, user) {
-            if (user) {
-                req.session.user = req.user = user || false;
-                next();
-            }
-        });
-    } else {
-        next();
-    }
-});
+require('./routes/index')(app);
 
-app.use(function (req, res, next) {
-    req.remoteIP = remoteIP(req);
-    next();
-});
-
-app.use(function (req, res, next) {
-    res.locals = {
-        app: {
-            user: req.user,
-            fn: fn
-        }
-    };
-    next();
-});
-
-
-app.use('/', routes);
-app.use('/auth/login', routes);
-
-app.use('/auth', auth);
-app.use('/app', require('./routes/apps'));
-app.use('/man/srv', require('./routes/srv'));
-app.use('/man/users', require('./routes/users'));
-app.use('/man/package', require('./routes/package'));
-
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
-});
-
-if (app.get('env') === 'development') {
-    app.use(function (err, req, res, next) {
-        res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-            error: err
-        });
-    });
-}
-
-app.use(function (err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: {}
-    });
-});
-
-module.exports = app;
+//\module.exports = app;

@@ -1,0 +1,60 @@
+extends layout
+
+block content
+	h1= title
+
+	.dash-main
+		.panel.panel-default
+			.panel-heading
+				.panel-title Основная информация
+			.panel-body
+				-for(key in OS)
+					.dash-row 
+						.dash-key #{key} 
+						.dash-value #{OS[key]}
+				.dash-row 
+					.progress
+						.progress-bar.progress-bar-info(style='width: #{Acf.getPercentRAM(OS.RAM,OS.FreeRAM)}%;')
+							span.sr-only cap ram
+
+
+
+					
+					
+
+	.dash-drives.clearfix
+		-each disk in Drives
+			.col-sm-4
+				.panel.panel-info
+					.panel-heading
+						.panel-title Диск: #{disk.Drive}
+					.panel-body
+						-for(key in disk)
+							.dash-row 
+								.dash-key #{key} 
+								.dash-value #{disk[key]}
+						.dash-row 
+							.progress
+								.progress-bar.progress-bar-info(style='width: #{disk.capacity};')
+									span.sr-only #{disk.capacity} capacity
+	.dash-interfaces.clearfix				
+		-for(nKey in NetworkInterfaces)
+			-var netI=NetworkInterfaces[nKey];
+				.col-sm-6
+					.panel.panel-success
+						.panel-heading
+							.panel-title Network Interface: #{nKey}
+						.panel-body
+							-for(key in netI[0])
+								.dash-row 
+									.dash-key #{key} 
+									.dash-value #{netI[0][key]}
+							hr
+							-for(key in netI[1])
+								.dash-row 
+									.dash-key #{key} 
+									.dash-value #{netI[1][key]}
+						
+						
+						
+			

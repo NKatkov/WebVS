@@ -2,14 +2,15 @@
 var router = express.Router();
 var User = require('../db').User;
 
+//	  '/auth/'
 router.get('/', function (req, res, next) {
     if (!req.user) {
-        res.render('auth', { error: "Пользователь не авторизован" });
+        res.render('auth');
     } else {
         res.redirect('/');
     }
 });
-
+//     '/auth/login'
 router.post('/login', function (req, res, next) {
     if (req.body.login && req.body.pass) {
         User.authorize(req.body.login, req.body.pass, function (err, User) {

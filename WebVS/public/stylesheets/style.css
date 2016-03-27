@@ -1,7 +1,75 @@
+html{
+	position: relative;
+    min-height: 100%;
+}
+
+
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+	padding-top: 70px;
+	padding-bottom: 30px;
+	margin-bottom:60px;
+	font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
-a {
-  color: #00b7ff;
+
+
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+    background-color: #f5f5f5;
 }
+
+.container .text-muted {
+    margin: 20px 0;
+}
+
+
+.rtext{
+	text-align:right;
+}  
+
+.ctext{
+	text-align:center;
+}  
+
+
+
+
+
+.dash-key{
+	display:inline-block;
+	min-width:70px;
+	margin-right:10px;
+	float:left;
+}
+
+.dash-value{
+	margin-left:80px;
+	font-weight:bold;
+	
+	overflow: hidden;
+}
+.dash-row{
+	content:'';
+	display:block;
+	clear:both;	
+	padding:3px 0;
+}
+
+
+
+
+.dash-main{
+	    margin-left:15px;
+	    margin-right:15px;
+}
+
+.dash-drives{
+	
+}
+.dash-interfaces{
+	
+}
+
