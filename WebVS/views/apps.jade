@@ -2,16 +2,19 @@
 
 block content
 	h1= title
-	p Личный кабинет
 	table
 		tr
 			td
-				ul
-					li: a(href="/app") Мои приложения
-					li: a(href="/app/install") Добавить новое приложение
-					li: a(href="/app/add_ports") Заполнить таблицу портов
-					li: a(href="/app/ports") Добавить новое приложение
-					li: a(href="/") На главную
+				div(class="btn-toolbar" role="toolbar")
+
+					button(type="button" class="btn btn-default btn-lg")
+						span.glyphicon.glyphicon-home
+							a(href="/app") Список
+							
+					button(type="button" class="btn btn-default btn-lg")
+						a(href="/app").glyphicon.glyphicon-plus Приложения
+					button(type="button" class="btn btn-default btn-lg")
+						a(href="/app").glyphicon.glyphicon-plus Порты
 			td
 	table.table
 		thead

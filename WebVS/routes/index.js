@@ -63,7 +63,7 @@ module.exports = function (app) {
 	
 	
 	
-	// обработка ошибок
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 	app.use(function (req, res, next) {
 		var err = new Error('Not found...');
 		err.status = 404;

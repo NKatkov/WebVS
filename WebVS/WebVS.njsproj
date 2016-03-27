@@ -15,7 +15,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>8d003d5d-10d0-4881-ac10-bc987fc32451</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>bin\www</StartupFile>
+    <StartupFile>app.js</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -34,15 +34,20 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="app.js" />
+    <Compile Include="boot\functions.js" />
+    <Compile Include="boot\index.js" />
     <Compile Include="db.js" />
     <Compile Include="node_modules\diskinfo\lib\diskinfo.js" />
     <Compile Include="node_modules\diskinfo\test\test.js" />
     <Compile Include="routes\apps.js" />
+    <Compile Include="routes\dashboard.js" />
+    <Compile Include="routes\home.js" />
     <Compile Include="routes\index.js" />
     <Compile Include="routes\auth.js" />
     <Compile Include="models.js" />
     <Compile Include="routes\srv.js" />
     <Compile Include="routes\users.js" />
+    <Compile Include="routes\_test.js" />
     <Compile Include="users\xklx\app.js" />
     <Content Include="bin\www" />
     <Content Include="node_modules\diskinfo\LICENSE.md" />
@@ -53,6 +58,8 @@
     <Content Include="README.md" />
     <Content Include="task.txt" />
     <Content Include="views\apps.jade" />
+    <Content Include="views\auth-modal.jade" />
+    <Content Include="views\dashboard.jade" />
     <Content Include="views\user_menu.jade" />
     <Content Include="views\users.jade" />
     <Content Include="views\index.jade" />
@@ -60,10 +67,12 @@
     <Content Include="views\error.jade" />
     <Content Include="views\auth.jade" />
     <Content Include="views\srv.jade" />
+    <Content Include="views\_sidebar.jade" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\" />
+    <Folder Include="boot\" />
     <Folder Include="node_modules\" />
     <Folder Include="node_modules\diskinfo\" />
     <Folder Include="node_modules\diskinfo\lib\" />
