@@ -45,6 +45,7 @@
     <Compile Include="routes\index.js" />
     <Compile Include="routes\auth.js" />
     <Compile Include="models.js" />
+    <Compile Include="routes\package.js" />
     <Compile Include="routes\srv.js" />
     <Compile Include="routes\users.js" />
     <Compile Include="routes\_test.js" />

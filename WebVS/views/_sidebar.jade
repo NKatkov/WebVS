@@ -1,5 +1,5 @@
 .list-group
-	a(href="/ajax/info").list-group-item Информация о сервере
+	a(href="/dashboard").list-group-item Информация о сервере
 	if(app.user.IsAdmin())
 		a(href="/man/srv").list-group-item Управление Сервером 
 	if(app.user.IsAdmin())
