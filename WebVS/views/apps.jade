@@ -42,7 +42,15 @@ block content
 					td #{key.Status}
 					td
 						if( key.Status == 'Online')
-							a(href='/app/#{key._id}/disable').btn.btn-xs.btn-info Выключить 
+							a(href='/app/#{key._id}/stop').btn.btn-xs.btn-info Остановить 
+						else
+							if(key.Enable)
+								a(href='/app/#{key._id}/run').btn.btn-xs.btn-info Запустить 
+							else
+								a(href='/app/#{key._id}/run').btn.btn-xs.btn-info.disabled Запустить 
+						| 
+						if(key.Enable)
+							a(href='/app/#{key._id}/disable').btn.btn-xs.btn-info Отключить 
 						else
 							a(href='/app/#{key._id}/enable').btn.btn-xs.btn-info Включить 
 						| 

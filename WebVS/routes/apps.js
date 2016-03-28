@@ -41,7 +41,8 @@ router.get('/install', function (req, res) {
 			AppName: 'Test',
 			UserOwner: req.user.username,
 			IP: '127.0.0.1',
-			PID: '',
+            PID: '',
+            Enable:false,
 			Path: './users/xklx/',
 			StartupFile: 'app.js',
 		})
@@ -62,11 +63,11 @@ router.get('/install', function (req, res) {
 
 router.get('/:id/del', function (req, res) {
 	if (req.user) {
-		AppDisable(req)
+		AppKill(req)
 		Application.findOneAndRemove({ _id: req.params.id }, function (err, app_del) {
 			console.log('Error: ' + err)
 			if (err) throw err;
-			if (app_del != null) {
+			if (app_del) {
 				var newPorts = new Ports({ Port: app_del.Port })
 				newPorts.save({}, function (err) {
 					console.log('Error: ' + err)
@@ -84,50 +85,77 @@ router.get('/:id/del', function (req, res) {
 	}
 });
 
-router.get('/:id/enable', function (req, res) {
+router.get('/:id/run', function (req, res) {
 	if (req.user) {
-		Application.findOne({ _id: req.params.id }, function (err, app) {
-			if (!err && app != null) {
-				var fs = require('fs'),
-					spawn = require('child_process').spawn,
-					child = spawn('node', [app.Path + app.StartupFile, app.Port]),
-					logStream = fs.createWriteStream(app.Path + 'logFile.log', { flags: 'a' });
-
-				child.stdout.pipe(logStream);
-				child.stderr.pipe(logStream);
-				child.on('close', function (code) {
-					console.log('child process exited with code ' + code);
-				});
-				
-				app.PID = child.pid
-				app.save({}, function (err) {
-					console.log('Error: ' + err)
-					console.log('app: ' + app)
-				})
-				res.redirect('/app');
-			} else {
-				Application.find({ UserOwner: req.user.username }, function (err, app_list) {
-					res.render('apps', { title: 'Личный кабинет', error: "Произошла ошибка при включении приложения id: " + req.params.id , List: app_list });
-				});
-			}
+        Application.findOne({ _id: req.params.id }, function (err, app) {
+            console.log()
+            if (!err && app) {
+                var PID = app.Start()
+                if (PID > 0) {
+                    res.redirect('/app');
+                } else {
+                    Application.find({ UserOwner: req.user.username }, function (err, app_list) {
+                        res.render('apps', { title: 'Личный кабинет', error: "Произошла ошибка при включении приложения id: " + req.params.id , List: app_list });
+                    });
+                }
+            }
 		})
 	} else {
 		res.redirect('/auth');
 	}
 });
 
-router.get('/:id/disable', function (req, res) {
-	if (req.user) {
-		AppDisable(req)
-		Application.find({ UserOwner: req.user.username }, function (err, app_list) {
-			res.render('apps', { title: 'Личный кабинет', error: "Произошла ошибка при выключении приложения id: " + req.params.id , List: app_list });
-		});
+router.get('/:id/stop', function (req, res) {
+    if (req.user) {
+        AppKill(req)
+        res.redirect('/app');
 	} else {
 		res.redirect('/auth');
 	}
 });
 
-AppDisable = function (data) {
+router.get('/:id/enable', function (req, res) {
+    if (req.user) {
+        Application.findOne({ _id: req.params.id }, function (err, app) {
+            if (!err && app) {
+                if (app.UserOwner == req.user.username || req.user.IsAdmin()) {
+                    app.Enable = true;
+                    app.save({}, function (err) {
+                        console.log('Error: ' + err)
+                        console.log('app: ' + app)
+                        res.redirect('/app');
+                    })
+                }
+            }
+        })
+    } else {
+        res.redirect('/auth');
+    }
+});
+
+router.get('/:id/disable', function (req, res) {
+    if (req.user) {
+        Application.findOne({ _id: req.params.id }, function (err, app) {
+            if (!err && app) {
+                if (app.UserOwner == req.user.username || req.user.IsAdmin()) {
+                    if (running(app.PID)) {
+                        process.kill(app.PID, signal = 'SIGTERM')
+                    }
+                    app.Enable = false;
+                    app.save({}, function (err) {
+                        console.log('Error: ' + err)
+                        console.log('app: ' + app)
+                        res.redirect('/app');
+                    })
+                }
+            }
+        })
+    } else {
+        res.redirect('/auth');
+    }
+});
+
+AppKill = function (data) {
 	Application.findOne({ _id: data.params.id }, function (err, app) {
 		if (!err && app != null) {
 			console.log(app)

@@ -2,10 +2,7 @@ var express = require('express');
 
 var db = require('../db');
 
-
 module.exports = function (app) {
-
-	
 	app.all('*',function (req, res, next) {
 		if (req.session.user) {
 			db.User.findById(req.session.user._id, function (err, user) {
