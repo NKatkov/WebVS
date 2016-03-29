@@ -38,7 +38,8 @@ block content
 					td #{key.AppName}
 						br 
 						| (#{key.IP})
-					td #{key.Port}
+					td 
+						a(target="_blank" href="http://#{key.IP}:#{key.Port}") #{key.Port}
 					td #{key.Status}
 					td
 						if( key.Status == 'Online')
