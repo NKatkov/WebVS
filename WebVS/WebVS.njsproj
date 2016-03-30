@@ -61,6 +61,7 @@
     <Content Include="views\apps.jade" />
     <Content Include="views\auth-modal.jade" />
     <Content Include="views\dashboard.jade" />
+    <Content Include="views\package.jade" />
     <Content Include="views\user_edit.jade" />
     <Content Include="views\user_menu.jade" />
     <Content Include="views\users.jade" />
