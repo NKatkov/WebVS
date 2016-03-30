@@ -1,0 +1,41 @@
+﻿extends layout
+
+block content
+	h1 #{title}
+		.navbar.navbar-default(role='navigation')
+			.container-fluid
+				.navbar-header
+
+				.navbar-collapse.collapse
+					.btn.btn-default.btn-ms.active
+						span.glyphicon.glyphicon-home
+							a(href="/man/users") Список
+					.btn.btn-default.btn-ms
+						span.glyphicon.glyphicon-plus
+							a(href="/man/users/create") Добавить пользователя
+	- console.log(user)
+	- _admin = ('admin'==user.role) ? 'selected' : null; 
+	- _user = ('user'==user.role) ? 'selected' : null;
+ 
+	form(method="post", action="/man/users/#{user._id}/edit")
+		.form-group
+			label(for="aModalRegRole") Права пользователя: 
+			select(name="role").form-control
+				option(value="admin"  selected=_admin)  Администратор
+				option(value="user" selected=_user)  Пользователь
+		.form-group
+			label(for="aModalRegPwd") Пароль:
+			input(type="password", name="pass").form-control 
+		p #{status}
+		.rtext
+			button.btn.btn-primary Изменить
+
+	p #{list_user}
+
+	if (error)
+		.alert.alert-danger #{error}
+	br
+	br
+	br
+	br
+	p #{status}
