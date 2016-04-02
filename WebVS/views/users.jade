@@ -32,109 +32,14 @@ block content
 					if(key.role == "admin")
 						td Администратор
 					td
-						a(href='/man/users/#{key._id}/edit').btn.btn-xs.btn-info Изменить 
-						a(href='/man/users/#{key._id}/delete').btn.btn-xs.btn-danger
-							i.glyphicon.glyphicon-remove Удалить
+						if(app.user.IsAdmin())
+							a(href='/man/users/#{key._id}/edit').btn.btn-xs.btn-info Изменить 
+							a(href='/man/users/#{key._id}/delete').btn.btn-xs.btn-danger
+								i.glyphicon.glyphicon-remove Удалить
 
-	p #{list_user}
+	//p #{list_user}
 
 	if (error)
 		.alert.alert-danger #{error}
-
-
-	div
-		ul.nav.nav-tabs(role='tablist')
-			li.active(role='presentation')
-				a(href='#auth-login', aria-controls='home', role='tab', data-toggle='tab') Войти   
-			li(role='presentation')
-				a(href='#auth-reg', aria-controls='profile', role='tab', data-toggle='tab') Регистрация    
-	div
-		.tab-content
-			#auth-login.tab-pane.active(role='tabpanel')
-				p #{message}
-				form(method="post",action="/auth/login")
-					if (error)
-						.alert.alert-danger #{error}
-					.form-group
-						label(for="aModalLogLogin") Логин
-						input(type="text", name="login").form-control#aModalLogLogin
-					.form-group
-						label(for="aModalLogPwd") Паорль:
-						input(type="password", name="pass").form-control#aModalLogPwd
-					.rtext
-						button.btn.btn-primary Войти
-			#auth-reg.tab-pane(role='tabpanel')
-				p
-				form(method="post", action="/auth/reg")
-					.form-group
-						label(for="aModalRegRole") Права нового пользователя:
-						select(name="role").form-control#aModalRegRole
-							option(value="admin")  Администратор
-							option(value="user")  Пользователь
-					.form-group
-						label(for="aModalRegLogin") Логин:
-						input(type="text", name="login").form-control#aModalRegLogin
-					.form-group
-						label(for="aModalRegPwd") Пароль:
-						input(type="password", name="pass").form-control#aModalRegPwd
-					p #{status}
-					.rtext
-						button.btn.btn-primary Зарегистрировать
-
-
-
-
-
-	table
-		tr
-			if(menu == 'user_create' && app.user.IsAdmin())
-				td: form(method="post", action="/auth/reg")
-						div Права нового пользователя:
-						div: select(id="role", name="role")
-							option(value="admin")  Администратор
-							option(value="user")  Пользователь
-						div Логин:
-						div: input(type="text", name="login")
-						div Пароль:
-						div: input(type="password", name="pass")
-						button Зарегистрировать
-
-			if(menu == 'user_delete' && app.user.IsAdmin())
-				td: form(action="/man/users/delete" method="post")
-					div: select(id="xxx", name="username")
-						-for(var i = 0;i<list_user.length;i++){
-						-var list = list_user[i].username
-						option(value="#{list}")  #{list}
-						-}
-					div: input(type="submit" value="Удалить")
-
-			if(menu == 'user_edit' && app.user.IsAdmin())
-				td: form(action="/man/users/edit" method="post")
-					div Выберите имя пользователя:
-					div: select(id="xxx", name="nick")
-						-for(var i = 0;i<list_user.length;i++){
-						-var list = list_user[i].username
-						option(value="#{list}")  #{list}
-						-}
-					div Новый пароль:
-					div: input(type="password", name="pass")
-					div: input(type="submit" value="Изменить")
-
-			if(menu == 'user_edit_role' && app.user.IsAdmin())
-				td: form(action="/man/users/editperm" method="post")
-					div: select(id="xxx", name="nick")
-						-for(var i = 0;i<list_user.length;i++){
-						-var list = list_user[i].username
-						option(value="#{list}")  #{list}
-						-}
-					div Роль нового пользователя:
-					div: select(id="role", name="role")
-						option(value="admin")  Администратор
-						option(value="user")  Пользователь
-
-					div: input(type="submit" value="Изменить")
-	br
-	br
-	br
-	br
-	p #{status}
+	if (status)
+		.alert.alert-success #{status}

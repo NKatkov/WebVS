@@ -50,11 +50,11 @@ function getInfo(result, onComplete) {
                     if (aDrives[i].used != 0) {
                         Drives.push( {
                             Drive: aDrives[i].filesystem,
-                            mounted: aDrives[i].mounted,
-                            blocks : aDrives[i].blocks,
-                            used: aDrives[i].used,
-                            available: aDrives[i].available,
-                            capacity: aDrives[i].capacity,
+                            Mounted: aDrives[i].mounted,
+                            Blocks : Math.round(aDrives[i].blocks /1024 / 1024 / 1024) + 'GB',
+                            Used: Math.round(aDrives[i].used / 1024 / 1024 / 1024) + 'GB',
+                            Available: Math.round(aDrives[i].available / 1024 / 1024 / 1024) + 'GB',
+                            Capacity: aDrives[i].capacity,
                         });
                     }
                 }

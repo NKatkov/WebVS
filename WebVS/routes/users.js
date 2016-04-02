@@ -76,10 +76,8 @@ router.get('/delete', function (req, res) {
 });
 
 router.post('/:id/edit', function (req, res) {
-	console.log(req.body)
-	
-	if (req.user && req.user.IsAdmin()) {
-		User.findOne({ username: req.param.id }, function (err, mUser) {
+    if (req.user && req.user.IsAdmin()) {
+        User.findOne({ _id: req.params.id }, function (err, mUser) {
 			if (!err) {
 				if (req.body.pass) { mUser.password = req.body.pass }
 				if (req.body.role) { mUser.role = req.body.role }

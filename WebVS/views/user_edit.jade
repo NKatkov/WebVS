@@ -34,8 +34,5 @@ block content
 
 	if (error)
 		.alert.alert-danger #{error}
-	br
-	br
-	br
-	br
-	p #{status}
+	if (status)
+		.alert.alert-success #{status}
