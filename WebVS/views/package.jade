@@ -1,8 +1,44 @@
 extends layout
 
 block content
-	h1= title
-	p Личный кабинет
+	h1= "Управление пакетами сервера"
+		.navbar.navbar-default(role='navigation')
+			.container-fluid
+				.navbar-header
+
+				.navbar-collapse.collapse
+					.btn.btn-default.btn-ms.active
+						span.glyphicon.glyphicon-home
+							a(href="/man/package") Список
+					.btn.btn-default.btn-ms
+						span.glyphicon.glyphicon-plus
+							a(href="/man/package/install") Установить
+					if(app.user.IsAdmin())
+						.btn.btn-default.btn-ms
+							span.glyphicon.glyphicon-plus
+								a(href="/man/package/update_all") Обновить все пакеты
+	table.table
+		thead
+			tr
+				th №
+				th Название
+				th Версия
+				th Описание
+				th.ctext(width="214") Действие
+
+		tbody
+			- var i = 1,key,List = {a:{name : "test", version : "ver", description : "description"}}
+			each key in List	 
+				tr
+					td #{i++}
+					td #{key.name}
+					td #{key.version}
+					td #{key.description}
+					td
+						a(href='/app/#{key.name}/disable').btn.btn-xs.btn-info Обновить 
+						a(href='/app/#{key.name}/del').btn.btn-xs.btn-danger
+							i.glyphicon.glyphicon-remove
+
 	table
 		tr
 			td
@@ -12,7 +48,6 @@ block content
 					li: a(href="/man/package/upgrade") Обновить пакет
 					li: a(href="/man/package/update_all") Обновить все пакеты
 					li: a(href="/man/package/uninstall") Удалить пакет
-					li: a(href="/") На главную
 			td
 				if(menu == 'install' && app.user.IsAdmin())
 					form(method="post" id ="install" action="/man/package/install")

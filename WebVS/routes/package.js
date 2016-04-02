@@ -22,9 +22,6 @@ router.get('/list', function (req, res) {
             child = exec('dpkg --list', function (error, stdout, stderr) {
 				var rePattern = new RegExp(/ii\s*(\b[a-z0-9\:\.\-\~\+\']*)\s+(\b.*?)\s+\b.*?\s+(.*?)\s*$/mi);
 				var list_package = {}
-				
-				var fs = require('fs');
-				var stream = fs.createWriteStream("my_file.txt");
 				stream.once('open', function(fd) {
 				  stream.write(stdout);
 				  stream.end();
@@ -42,8 +39,8 @@ router.get('/list', function (req, res) {
 							description : arrMatches[3]
 						}
 					}
-				}
-				res.json(list_package)
+                }
+                res.render('package', {List: list_package, status: stdout });
 				
 				//arrMatches[i] = {name: arrMatches[0]}
 				//

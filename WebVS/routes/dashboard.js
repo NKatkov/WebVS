@@ -9,9 +9,6 @@ var async = require('async');
 var io_client = require('socket.io-client');
 var db = require('../db');
 
-
-
-
 router.get('/', function (req, res) {
     if (req.user) {
         getInfo(null, function (err, str) {
@@ -19,10 +16,6 @@ router.get('/', function (req, res) {
         })
     }
 });
-
-
-
-
 
 function getInfo(result, onComplete) {
     var err;

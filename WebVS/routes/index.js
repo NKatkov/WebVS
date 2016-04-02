@@ -55,11 +55,7 @@ module.exports = function (app) {
 	app.use('/man/users', require('./users'));
 	app.use('/man/package', require('./package'));
 
-	
-	
-	
-	
-	
+
 	// ��������� ������
 	app.use(function (req, res, next) {
 		var err = new Error('Not found...');
