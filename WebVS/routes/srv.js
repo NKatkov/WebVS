@@ -15,7 +15,10 @@ router.get('/reboot', function (req, res) {
     if (req.user && req.user.IsAdmin()) {
         var exec = require('child_process').exec,
             converter = new Converter({}),
-            child = exec('chcp 65001 | echo reboot', function (error, stdout, stderr) {
+            child = exec('chcp 65001 | sudo reboot -h now', function (error, stdout, stderr) {
+				console.log(error)
+				console.log(stdout)
+				console.log(stderr)
                 res.render('srv', { title: 'Управление сервером ', status: stdout });
             });
     } else {

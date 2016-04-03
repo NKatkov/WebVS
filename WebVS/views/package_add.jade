@@ -17,28 +17,15 @@ block content
 						.btn.btn-default.btn-ms
 							span.glyphicon.glyphicon-plus
 								a(href="/man/package/update_all") Обновить все пакеты
-	if(List)
-		table.table
-			thead
-				tr
-					th №
-					th Название
-					th Версия
-					th Описание
-					th.ctext(width="214") Действие
 
-			tbody
-				- var i = 1,key
-				each key in List
-					tr
-						td #{i++}
-						td #{key.name}
-						td #{key.version}
-						td #{key.description}
-						td
-							a(href='/man/package/#{key.name}/upgrade').btn.btn-xs.btn-info Обновить 
-							a(href='/man/package/#{key.name}/delete').btn.btn-xs.btn-danger
-								i.glyphicon.glyphicon-remove
+	form(method="post", action="/man/package/add")
+		.form-group
+			label(for="aModalRegPwd") Название пакета:
+			input(name="add").form-control 
+		p #{status}
+		.rtext
+			button.btn.btn-primary Установить
+								
 	details(open)
 		summary 'Вывод из консоли'
 		if (status)
