@@ -46,7 +46,7 @@ router.post('/add', function (req, res) {
             converter = new Converter({}),
             child = exec('sudo apt-get install -y  ' + req.body.add , function (error, stdout, stderr) {
 				var str = stdout.split(/$/img)
-				var str2 = stdout.replace(/$/img, '"\r\n</br>"')
+				var str2 = stdout.replace(/$/img, '"\r\n"')
 				
                 res.render('package', {status: str2, errstd:stderr  });
             });

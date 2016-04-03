@@ -1,0 +1,38 @@
+extends layout
+
+block content
+	h1= "Управление приложениями Nodejs"
+
+		.navbar.navbar-default(role='navigation')
+			.container-fluid
+				.navbar-header
+
+				.navbar-collapse.collapse
+					.btn.btn-default.btn-ms.active
+						span.glyphicon.glyphicon-home
+							a(href="/app") Список
+					.btn.btn-default.btn-ms
+						span.glyphicon.glyphicon-plus
+							a(href="/app/install") Приложение
+					if(app.user.IsAdmin())
+						.btn.btn-default.btn-ms
+							span.glyphicon.glyphicon-plus
+								a(href="/app/ports") Порты(адм)
+					
+	form(method="post", action="/app/install")
+		.form-group
+			label Название:
+			input(type="text", name="AppName").form-control
+		.form-group
+			label Исполняемый файл:
+			input(type="text", name="AppJS").form-control
+		p #{status}
+		.rtext
+			button.btn.btn-primary Изменить
+
+	p #{list_user}
+
+	if (error)
+		.alert.alert-danger #{error}
+	if (status)
+		.alert.alert-success #{status}

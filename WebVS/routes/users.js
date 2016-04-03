@@ -20,7 +20,30 @@ router.get('/', function (req, res) {
 
 router.get('/create', function (req, res) {
 	if (req.user && req.user.IsAdmin()) {
-		res.render('users', { title: 'Создание пользователя', User: req.user, menu: 'user_create' });
+		res.render('user_create');
+	} else {
+		res.redirect('/auth');
+	}
+});
+
+router.post('/create', function (req, res, next) {
+	if (req.user && req.user.IsAdmin()) {
+		if (req.body.login && req.body.pass) {
+			var newUser = new User({ username: req.body.login, password: req.body.pass, role: req.body.role })
+			newUser.save(function (err) {
+				if (!err) {
+					var spawn = require('child_process').spawn,
+					child = spawn('sudo', ["useradd", req.body.login, "-c", newUser.username, "-g", "WebApi", "-m", "-p", req.body.pass])
+
+					if (req.session.user) {
+						res.render('user_create', { title: 'Управление пользователями', status: "Пользователь " + req.body.login + " успешно создан" });
+					}
+				} else {
+					res.render('user_create', { title: 'Управление пользователями', error: "Error:reg(newUser.save)" });
+				}
+			});
+			return
+		}
 	} else {
 		res.redirect('/auth');
 	}
@@ -33,43 +56,6 @@ router.get('/:id/edit', function (req, res) {
 		});
 				
 		
-	} else {
-		res.redirect('/auth');
-	}
-});
-
-
-
-router.get('/edit', function (req, res) {
-	if (req.user && req.user.IsAdmin()) {
-		console.log(req.param);
-		User.find({}, function (err, users) {
-			if (err) throw err;
-			res.render('users', { title: 'Изменение пользователя', list_user: users });
-		});
-
-	} else {
-		res.redirect('/auth');
-	}
-});
-
-router.get('/editperm', function (req, res) {
-	if (req.user && req.user.IsAdmin()) {
-		User.find({}, function (err, users) {
-			if (err) throw err;
-			res.render('users', { title: 'Управление правами пользователями', list_user: users, menu: 'user_edit_role' });
-		});
-	} else {
-		res.redirect('/auth');
-	}
-});
-
-router.get('/delete', function (req, res) {
-	if (req.user && req.user.IsAdmin()) {
-		User.find({}, function (err, users) {
-			if (err) throw err;
-			res.render('users', { title: 'Удаление пользователя', list_user: users, menu: 'user_delete' });
-		});
 	} else {
 		res.redirect('/auth');
 	}
@@ -91,21 +77,9 @@ router.post('/:id/edit', function (req, res) {
 	}
 });
 
-router.post('/editperm', function (req, res) {
+router.get('/:id/delete', function (req, res) {
 	if (req.user && req.user.IsAdmin()) {
-		User.findOne({ username: req.body.nick }, function (err, mUser) {
-			if (!err) {
-				mUser.role = req.body.role;
-				mUser.save();
-				res.render('users', { title: 'Управление правами пользователями', menu: 'users' , status: 'Пользователь успешно изменен' });
-			}
-		});
-	}
-});
-
-router.post('/delete', function (req, res) {
-	if (req.user && req.user.IsAdmin()) {
-		User.findOneAndRemove({ username: req.body.username }, function (err, user_del) {
+		User.findOneAndRemove({ _id: req.params.id }, function (err, user_del) {
 			if (err) throw err;
 			if (user_del != null) {
 				db.collection('sessions').remove({ session: new RegExp('' + user_del._id + '', 'i') }, function (err, ress) {
@@ -114,7 +88,7 @@ router.post('/delete', function (req, res) {
 						if (user_del.username == req.body.username) { req.session = null }
 						User.find({}, function (err, user_list) {
 							if (err) throw err;
-							res.render('users', { title: 'Управление пользователями', list_user: user_list, status: "Пользователь с логином " + req.body.username + " успешно удален" });
+							res.render('users', { title: 'Управление пользователями', list_user: user_list, status: "Пользователь с логином " + user_del.username + " успешно удален" });
 						});
 					}
 				});

@@ -37,16 +37,27 @@ router.get('/add_ports', function (req, res) {
 
 router.get('/install', function (req, res) {
 	if (req.user) {
+		res.render('app_install');
+	} else {
+		res.redirect('/auth');
+	}
+});
+
+router.post('/install', function (req, res) {
+	if (req.user) {
 		var newApp = new Application({
-			AppName: 'Test',
+			AppName: req.body.AppName,
 			UserOwner: req.user.username,
-			IP: '127.0.0.1',
+			IP: 'nhost.cloudapp.net',
             PID: '',
             Enable:false,
-			Path: './users/xklx/',
-			StartupFile: 'app.js',
+			Path: '/home/' + req.user.username + "/",
+			StartupFile: req.body.AppJS,
 		})
+		var spawn = require('child_process').spawn,
+		child = spawn("sudo",["-u",req.user.username,'npm',"install"],{cwd:"/home/" + req.user.username})
 		
+		console.log(child.cwd)
 		Ports.findOneAndRemove({}, function (err, result) {
 			console.log(result)
 			newApp.Port = result.Port
@@ -139,7 +150,7 @@ router.get('/:id/disable', function (req, res) {
             if (!err && app) {
                 if (app.UserOwner == req.user.username || req.user.IsAdmin()) {
                     if (running(app.PID)) {
-                        process.kill(app.PID, signal = 'SIGTERM')
+                        app.Stop()
                     }
                     app.Enable = false;
                     app.save({}, function (err) {
@@ -161,7 +172,7 @@ AppKill = function (data) {
 			console.log(app)
 			if (app.UserOwner == data.user.username || data.user.IsAdmin()) {
 				if (running(app.PID)) {
-					process.kill(app.PID, signal = 'SIGTERM')
+					app.Stop()
 				}
 			}
 		}

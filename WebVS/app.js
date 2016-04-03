@@ -32,7 +32,7 @@ app.use(session({
     saveUninitialized: true,
 }));
 
-db.Application.find({Enable:true}, function (err, app) {
+db.Application.find({Enable2:true}, function (err, app) {
     if (!err && app) {
         for (i = 0; i < app.length; i++) {
             if (app[i].Start()) {

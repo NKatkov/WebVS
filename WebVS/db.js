@@ -103,7 +103,7 @@ AppSchema.method({
     Start: function () {
         var fs = require('fs'),
             spawn = require('child_process').spawn,
-            child = spawn('node', [this.Path + this.StartupFile, this.Port]),
+            child = spawn('sudo', ["-u",this.UserOwner,"node",this.Path + this.StartupFile, this.Port],{detached: true}),
             logStream = fs.createWriteStream(this.Path + 'logFile.log', { flags: 'a' });
         
         child.stdout.pipe(logStream);
@@ -115,11 +115,18 @@ AppSchema.method({
         this.PID = child.pid
         this.save({}, function (err) {
             if (!err) {
+				child.unref();
                 console.log('Error: ' + err)
             }
         })
         return this.PID
     },
+	Stop: function () {
+		    var spawn = require('child_process').spawn,
+			child = spawn("kill", ["15", -this.PID])
+	},
+	
+	
     checkPassword: function (password) {
         return this.encryptPassword(password) === this.hashedPassword;
     },

@@ -1,0 +1,17 @@
+{
+  "name": "WebVS",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "description": "WebVS",
+  "author": {
+    "name": "Николай Катков",
+    "email": "NKatkov@yandex.ru"
+  },
+  "dependencies": {
+    "body-parser": "~1.8.1",
+    "express": "~4.9.0"
+  }
+}
