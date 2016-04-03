@@ -101,10 +101,10 @@ var AppSchema = new Schema({
 
 AppSchema.method({
     Start: function () {
-        var fs = require('fs'),
-            spawn = require('child_process').spawn,
-            child = spawn('sudo', ["-u",this.UserOwner,"node",this.Path + this.StartupFile, this.Port],{detached: true}),
-            logStream = fs.createWriteStream(this.Path + 'logFile.log', { flags: 'a' });
+		var fs = require('fs');
+		var spawn = require('child_process').spawn,
+		child = spawn('sudo', ["-u",this.UserOwner,"node",this.Path + this.StartupFile, this.Port],{detached: true}),
+		logStream = fs.createWriteStream(this.Path + 'logFile.log', { flags: 'a' });
         
         child.stdout.pipe(logStream);
         child.stderr.pipe(logStream);

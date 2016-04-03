@@ -54,16 +54,15 @@ router.post('/install', function (req, res) {
 			Path: '/home/' + req.user.username + "/",
 			StartupFile: req.body.AppJS,
 		})
-		var spawn = require('child_process').spawn,
-		child = spawn("sudo",["-u",req.user.username,'npm',"install"],{cwd:"/home/" + req.user.username})
 		
-		console.log(child.cwd)
+		var spawnSync = require('child_process').spawnSync
 		Ports.findOneAndRemove({}, function (err, result) {
 			console.log(result)
 			newApp.Port = result.Port
-			//newApp.Port = "8081"
 			newApp.save({}, function (err) {
 				console.log('Error: ' + err)
+				console.log(newApp)
+				child = spawnSync("sudo",["-u",newApp.UserOwner,'npm',"install"],{cwd:newApp.Path})
 				res.redirect('/app');
 			});
 		})
