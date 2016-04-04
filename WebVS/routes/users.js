@@ -91,6 +91,9 @@ router.get('/:id/delete', function (req, res) {
 						if (user_del.username == req.body.username) { req.session = null }
 						User.find({}, function (err, user_list) {
 							if (err) throw err;
+							var spawnSync = require('child_process').spawnSync,
+							child = spawnSync('sudo', ["deluser", user_del.username])
+							child2 = spawnSync('sudo', ["mv", "/home/" + user_del.username, "/home/archived_users/" + user_del._id])
 							res.render('users', { title: 'Управление пользователями', list_user: user_list, status: "Пользователь с логином " + user_del.username + " успешно удален" });
 						});
 					}
