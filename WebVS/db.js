@@ -95,7 +95,7 @@ var AppSchema = new Schema({
             }
         }
     },
-    Path: { type: String, required: true },
+    Path: {	type: String, required: true},
     StartupFile: { type: String, required: true },
 });
 
@@ -124,6 +124,7 @@ AppSchema.method({
 	Stop: function () {
 		    var spawn = require('child_process').spawn,
 			child = spawn("kill", ["15", -this.PID])
+			return true
 	},
 	
 	

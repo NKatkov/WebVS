@@ -1,6 +1,7 @@
 ﻿var express = require('express');
 var router = express.Router();
 var User = require('../db').User;
+var Application = require('../db').Application;
 var db = require('../db').db;
 
 router.get('/', function (req, res) {
@@ -32,11 +33,8 @@ router.post('/create', function (req, res, next) {
 			var newUser = new User({ username: req.body.login, password: req.body.pass, role: req.body.role })
 			newUser.save(function (err) {
 				if (!err) {
-					var text = "cache=" + "/home/" + req.body.login +"/.npm\r\nuserconfig=" + "/home/" + req.body.login +"/.npmrc"
-					var fs = require('fs');
-					var spawnSync = require('child_process').spawnSync,
 					child = spawnSync('sudo', ["useradd", req.body.login, "-c", newUser.username, "-g", "WebApi", "-m", "-p", req.body.pass])
-					fs.writeFile("/home/" + req.body.login +"/.npmrc", text, function(err) {});
+					
 					
 					if (req.session.user) {
 						res.render('user_create', { title: 'Управление пользователями', status: "Пользователь " + req.body.login + " успешно создан" });
@@ -88,16 +86,29 @@ router.get('/:id/delete', function (req, res) {
 				db.collection('sessions').remove({ session: new RegExp('' + user_del._id + '', 'i') }, function (err, ress) {
 					if (err) throw err;
 					if (ress.result.ok == 1 && ress.result.n >= 0) {
-						if (user_del.username == req.body.username) { req.session = null }
+						if (user_del.username == req.user.username) { req.session = null }
 						User.find({}, function (err, user_list) {
-							if (err) throw err;
-							var spawnSync = require('child_process').spawnSync,
-							child = spawnSync('sudo', ["deluser", user_del.username])
-							child2 = spawnSync('sudo', ["mv", "/home/" + user_del.username, "/home/archived_users/" + user_del._id])
+							if (err) throw err;	
 							res.render('users', { title: 'Управление пользователями', list_user: user_list, status: "Пользователь с логином " + user_del.username + " успешно удален" });
 						});
 					}
 				});
+				Application.find({UserOwner:user_del.username}, function (err, app) {
+					if (err) throw err;
+					if (!err && app) {
+						for (i = 0; i < app.length; i++) {
+							if (app[i].Stop()) {
+								app[i].remove({},function(error){
+									console.log(error);
+								})
+								console.log("App Stop(): Port " + app[i].Port + " PID:" + app[i].PID)
+							}
+						}
+					}
+				})
+				var spawn = require('child_process').spawn,
+				child = spawn('sudo', ["mv", "/home/" + user_del.username, "/home/archived_users/" + user_del.username + "_" + user_del._id])
+				child2 = spawn('sudo', ["deluser", user_del.username])
 			} else {
 				User.find({}, function (err, user_list) {
 					if (err) throw err;

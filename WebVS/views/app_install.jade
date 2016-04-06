@@ -19,17 +19,23 @@ block content
 							span.glyphicon.glyphicon-plus
 								a(href="/app/ports") Порты(адм)
 					
-	form(method="post", action="/app/install")
+	form(role="form", method="post", action="/app/install", enctype="multipart/form-data")
 		.form-group
 			label Название:
 			input(type="text", name="AppName").form-control
 		.form-group
 			label Исполняемый файл:
 			input(type="text", name="AppJS").form-control
+		.form-group
+			input(type="file", name="myfile", id="myfile")
 		p #{status}
 		.rtext
-			button.btn.btn-primary Изменить
-
+			button.btn.btn-primary Добавить
+			
+	form(role="form", action="/", method="post", )
+		div(class="form-group")
+			label Upload File
+			
 	p #{list_user}
 
 	if (error)

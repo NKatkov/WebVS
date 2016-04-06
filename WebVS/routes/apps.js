@@ -4,6 +4,10 @@ var User = require('../db').User;
 var Application = require('../db').Application;
 var Ports = require('../db').Ports;
 var running = require('is-running')
+var async = require('async');
+var multer  = require('multer')
+var upload = multer({ dest: './public/uploads/' })
+
 
 router.get('/', function (req, res) {
 	if (req.user) {
@@ -43,8 +47,9 @@ router.get('/install', function (req, res) {
 	}
 });
 
-router.post('/install', function (req, res) {
+router.post('/install',upload.single('myfile'), function (req, res) {
 	if (req.user) {
+		var spawn = require('child_process').spawn
 		var newApp = new Application({
 			AppName: req.body.AppName,
 			UserOwner: req.user.username,
@@ -54,16 +59,37 @@ router.post('/install', function (req, res) {
 			Path: '/home/' + req.user.username + "/",
 			StartupFile: req.body.AppJS,
 		})
-		
-		var spawnSync = require('child_process').spawnSync
+		newApp.Path += newApp._id + "/"
 		Ports.findOneAndRemove({}, function (err, result) {
 			console.log(result)
 			newApp.Port = result.Port
 			newApp.save({}, function (err) {
 				console.log('Error: ' + err)
 				console.log(newApp)
-				child = spawnSync("sudo",["-u",newApp.UserOwner,'npm',"install"],{cwd:newApp.Path})
-				res.redirect('/app');
+		
+				async.waterfall([
+					function(callback){
+						ch = spawn("sudo",["-u",newApp.UserOwner,'unzip',req.file.path,"-d",newApp.Path])
+
+						callback(null, 'один', 'два');
+					},
+					function(arg1, arg2, callback){
+						var text = "cache=" + "/home/" + newApp.UserOwner +"/.npm\r\nuserconfig=" + "/home/" + newApp.UserOwner +"/.npmrc";
+						var fs = require('fs');
+						fs.writeFile("/home/" + newApp.UserOwner +"/.npmrc", text, function(err) {});
+						callback(null, 'три');
+					},
+					function(arg1, callback){
+						ch = spawn("sudo",["-u",newApp.UserOwner,'npm',"install"],{cwd:newApp.Path})
+
+						callback(null, 'Готово');
+					},
+				], function (err, result) {
+					console.log(result)
+					res.redirect('/app');
+				   // Сейчас результат будет равен 'Готово'    
+				});
+				
 			});
 		})
 	} else {

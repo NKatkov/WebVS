@@ -38,11 +38,12 @@ router.post('/reg', function (req, res, next) {
         var newUser = new User({ username: req.body.login, password: req.body.pass, role: req.body.role })
         newUser.save(function (err) {
             if (!err) {
-                if (req.session.user) {
-                    res.render('users', { title: 'Управление пользователями', status: "Пользователь " + req.body.login + " успешно зарегистрирован" });
-                } else {
-                    res.render('auth', { title: 'Управление пользователями', status: "Пользователь " + req.body.login + " успешно зарегистрирован" });
-                }
+				var text = "cache=" + "/home/" + req.body.login +"/.npm\r\nuserconfig=" + "/home/" + req.body.login +"/.npmrc"
+				var fs = require('fs');
+				var spawnSync = require('child_process').spawnSync,
+				child = spawnSync('sudo', ["useradd", req.body.login, "-g", "WebApi", "-m", "-p", req.body.pass])
+				fs.writeFile("/home/" + req.body.login +"/.npmrc", text, function(err) {});
+				res.render('auth', { title: 'Управление пользователями', status: "Пользователь " + req.body.login + " успешно зарегистрирован" });
             } else {
                 res.render('users', { title: 'Управление пользователями', status: "Error:reg(newUser.save)" });
             }
