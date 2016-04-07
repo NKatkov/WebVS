@@ -8,10 +8,10 @@ block content
 				.navbar-header
 
 				.navbar-collapse.collapse
-					.btn.btn-default.btn-ms.active
+					.btn.btn-default.btn-ms
 						span.glyphicon.glyphicon-home
 							a(href="/app") Список
-					.btn.btn-default.btn-ms
+					.btn.btn-default.btn-ms.active
 						span.glyphicon.glyphicon-plus
 							a(href="/app/install") Приложение
 					if(app.user.IsAdmin())
@@ -28,13 +28,8 @@ block content
 			input(type="text", name="AppJS").form-control
 		.form-group
 			input(type="file", name="myfile", id="myfile")
-		p #{status}
 		.rtext
 			button.btn.btn-primary Добавить
-			
-	form(role="form", action="/", method="post", )
-		div(class="form-group")
-			label Upload File
 			
 	p #{list_user}
 
