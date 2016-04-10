@@ -21,10 +21,10 @@ router.get('/', function (req, res) {
 	}
 });
 
-router.get('/add_ports', function (req, res) {
+router.get('/ports', function (req, res) {
 	if (req.user) {
-		for (i = 0; i < 100; i++) {
-			var newPorts = new Ports({ Port: 9000 + i })
+		for (i = 0; i < 10; i++) {
+			var newPorts = new Ports({ Port: 8081 + i })
 			newPorts.save({}, function (err) {
 				console.log('Error: ' + err)
 			});
@@ -70,11 +70,11 @@ router.post('/install',upload.single('myfile'), function (req, res) {
 						})
 					},
 					function(arg1, callback){
-						var text = "'cache=" + "/home/" + newApp.UserOwner +"/.npm\r\nuserconfig=" + "/home/" + newApp.UserOwner +"/.npmrc'";
-						ch = exec("sudo -u " + newApp.UserOwner + ' echo -E ' + text + " >> " + newApp.Path + ".npmrc",function(error, stdout, stderr){
+						exec("sudo -u " + newApp.UserOwner + " sh -c 'echo cache=/home/" + newApp.UserOwner + "/.npm >> /home/" + newApp.UserOwner + "/.npmrc && echo userconfig=/home/" + newApp.UserOwner + "/.npmrc >> " + newApp.Path + ".npmrc'",function(error, stdout, stderr){
 							if(!error && arg1){
 								callback(null, true);
 							}else{
+								console.log(error)
 								callback("112", false);
 							}
 						})

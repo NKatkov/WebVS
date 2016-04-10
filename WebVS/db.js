@@ -5,7 +5,7 @@
     util = require("util");
 var net = require('net');
 var running = require('is-running')
-
+var spawn = require('child_process').spawn
 var conn = mongoose.connect('mongodb://nhost.cloudapp.net:27017/WebVS');
 var db = mongoose.connection;
 db.on('error', function (error) {
@@ -102,10 +102,13 @@ var AppSchema = new Schema({
 AppSchema.method({
     Start: function () {
 		var fs = require('fs');
-		var spawn = require('child_process').spawn,
-		child = spawn('sudo', ["-u",this.UserOwner,"node",this.Path + this.StartupFile, this.Port],{detached: true}),
-		logStream = fs.createWriteStream(this.Path + 'logFile.log', { flags: 'a' });
-        
+		var spawn = require('child_process').spawn
+		child2 = spawn('sudo', ["-u",this.UserOwner,this.Path + "touch",'logFile.log'],{detached: true})
+		child = spawn('sudo', ["-u",this.UserOwner,"PORT=" + this.Port ,"node",this.Path + this.StartupFile, this.Port],{detached: true})
+		
+		
+		logStream = fs.createWriteStream(this.Path + 'logFile.log', { flags: 'a', encoding: 'UTF-8'});
+
         child.stdout.pipe(logStream);
         child.stderr.pipe(logStream);
         child.on('close', function (code) {
@@ -122,7 +125,6 @@ AppSchema.method({
         return this.PID
     },
 	Stop: function () {
-		    var spawn = require('child_process').spawn,
 			child = spawn("kill", ["15", -this.PID])
 			return true
 	},

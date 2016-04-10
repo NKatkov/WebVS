@@ -37,7 +37,7 @@ block content
 							.progress
 								.progress-bar.progress-bar-info(style='width: #{disk.capacity};')
 									span.sr-only #{disk.capacity} capacity
-	.dash-interfaces.clearfix				
+	.dash-interfaces.clearfix
 		-for(nKey in NetworkInterfaces)
 			-var netI=NetworkInterfaces[nKey];
 				.col-sm-6

@@ -3,6 +3,7 @@ var router = express.Router();
 var User = require('../db').User;
 var Application = require('../db').Application;
 var db = require('../db').db;
+var exec = require('child_process').exec
 
 router.get('/', function (req, res) {
 	if (req.user) {
@@ -33,12 +34,20 @@ router.post('/create', function (req, res, next) {
 			var newUser = new User({ username: req.body.login, password: req.body.pass, role: req.body.role })
 			newUser.save(function (err) {
 				if (!err) {
-					child = spawnSync('sudo', ["useradd", req.body.login, "-c", newUser.username, "-g", "WebApi", "-m", "-p", req.body.pass])
-					
-					
-					if (req.session.user) {
-						res.render('user_create', { title: 'Управление пользователями', status: "Пользователь " + req.body.login + " успешно создан" });
-					}
+					exec("sudo useradd " + req.body.login + " -c"  + newUser.username + " -g WebApi -m -p " + req.body.pass,function(error, stdout, stderr){
+						if(!error){
+							exec("sudo -u " + newUser.username + " sh -c 'echo cache=/home/" + newUser.username + "/.npm >> /home/" + newUser.username + "/.npmrc && echo userconfig=/home/" + newUser.username + "/.npmrc >> /home/" + newUser.username + "/.npmrc'",function(error, stdout, stderr){
+								if (req.session.user && !error) {
+									res.render('user_create', { title: 'Управление пользователями', status: "Пользователь " + req.body.login + " успешно создан" });
+								} else {
+									console.log(error)
+									res.render('user_create', { title: 'Управление пользователями', error: "Error: create .npmrc" });
+								}
+							})
+						} else {
+							res.render('user_create', { title: 'Управление пользователями', error: "Error: useradd" });
+						}
+					})
 				} else {
 					res.render('user_create', { title: 'Управление пользователями', error: "Error:reg(newUser.save)" });
 				}
