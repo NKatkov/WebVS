@@ -6,7 +6,16 @@ var Ports = require('../db').Ports;
 var running = require('is-running')
 var async = require('async');
 var multer  = require('multer')
-var upload = multer({ dest: './public/uploads/' })
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, '/tmp/uploads')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now())
+  }
+})
+
+var upload = multer({ storage: storage })
 var exec = require('child_process').exec
 
 router.get('/', function (req, res) {
@@ -57,45 +66,64 @@ router.post('/install',upload.single('myfile'), function (req, res) {
 		newApp.Path += newApp._id + "/"
 		Ports.findOneAndRemove({}, function (err, result) {
 			newApp.Port = result.Port
-			newApp.save({}, function (err) {
-				if(err){console.log('Error: ' + err)}
-				async.waterfall([
-					function(callback){
-						ch = exec("sudo -u " + newApp.UserOwner + ' unzip ' + req.file.path + " -d " + newApp.Path,function(error, stdout, stderr){
-							if(!error){
-								callback(null, true);
-							}else{
-								callback("101", false);
-							}
-						})
-					},
-					function(arg1, callback){
-						exec("sudo -u " + newApp.UserOwner + " sh -c 'echo cache=/home/" + newApp.UserOwner + "/.npm >> /home/" + newApp.UserOwner + "/.npmrc && echo userconfig=/home/" + newApp.UserOwner + "/.npmrc >> " + newApp.Path + ".npmrc'",function(error, stdout, stderr){
-							if(!error && arg1){
-								callback(null, true);
-							}else{
-								console.log(error)
-								callback("112", false);
-							}
-						})
-					},
-					function(arg1, callback){
-						ch = exec("sudo -u " + newApp.UserOwner + " npm install",{cwd:newApp.Path},function(error, stdout, stderr){
-							if(!error && arg1){
-								callback(null, true);
-							}else{
-								callback("425", false);
-							}
-						})
-					},
-				], function (err, result) {
-					console.log(result)
-					if(result){
-						res.redirect('/app');
-					}else{
-						res.render('app_install',{error : "При установке приложения возникла ошибка " + err });
-					}
-				});
+			if(err){console.log('Error: ' + err)}
+			async.waterfall([
+				function(callback){
+					ch = exec("sudo -u " + newApp.UserOwner + ' unzip ' + req.file.path + " -d " + newApp.Path,{maxBuffer: 1024 * 500},function(error, stdout, stderr){
+						if(!error){
+							require('fs').readFile( newApp.Path + 'package.json', 'utf8', function (err, data) {
+								if (err) throw err; // we'll not consider error handling for now
+								newApp.Package = JSON.parse(data);
+								if(req.body.AppName == ""){newApp.AppName = newApp.Package.name}
+								if(req.body.AppJS == ""){newApp.StartupFile = newApp.Package.scripts[0].start}
+								
+								console.log(newApp)
+							});
+							
+							
+							console.log(error)
+							callback(null, true);
+						}else{
+							console.log(error)
+							callback("101", false);
+						}
+					})
+				},
+				function(arg1, callback){
+					exec("sudo -u " + newApp.UserOwner + " sh -c 'echo cache=/home/" + newApp.UserOwner + "/.npm >> /home/" + newApp.UserOwner + "/.npmrc && echo userconfig=/home/" + newApp.UserOwner + "/.npmrc >> " + newApp.Path + ".npmrc'",function(error, stdout, stderr){
+						if(!error && arg1){
+							callback(null, true);
+						}else{
+							console.log(error)
+							callback("112", false);
+						}
+					})
+				},
+				function(arg1, callback){
+					ch = exec("sudo -u " + newApp.UserOwner + " npm install",{cwd:newApp.Path},function(error, stdout, stderr){
+						if(!error && arg1){
+							callback(null, true);
+						}else{
+							callback("425", false);
+						}
+					})
+				},
+			], function (err, result) {
+				console.log(result)
+				if(result){
+					newApp.save({}, function (err) {
+						if(err){
+							
+							console.log('Error: ' + err)
+							res.render('app_install',{error : "При установке приложения возникла ошибка newApp.save " + err});
+						}else{
+							console.log(newApp.Package.name)
+							res.redirect('/app');
+						}
+					});
+				}else{
+					res.render('app_install',{error : "При установке приложения возникла ошибка " + err });
+				}
 			});
 		})
 	} else {
@@ -113,7 +141,7 @@ router.get('/:id/del', function (req, res) {
 				var newPorts = new Ports({ Port: app_del.Port })
 				newPorts.save({}, function (err) {
 					console.log('Error: ' + err)
-					ch = exec("sudo -u " + app_del.UserOwner + " rm -rf " + app_del.Path,function(error, stdout, stderr){
+					ch = exec("sudo rm -rf " + app_del.Path,function(error, stdout, stderr){
 						if(err){console.log('Error: ' + err)}
 					})
 					

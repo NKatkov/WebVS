@@ -27,12 +27,12 @@ block content
 			label Исполняемый файл:
 			input(type="text", name="AppJS").form-control
 		.form-group
-			label Укажите параметры запуска вашего приложения
+			label Укажите параметры запуска вашего приложения			
 			label (по умолчанию считывать из package.json):
 			.input-group
 				span.input-group-addon
 					input(type="checkbox")
-				input(type="text",  placeholder="Команда запуска").form-control
+				input(type="text",  placeholder="Команда запуска", data-toggle="tooltip",  title="Tooltip on left").form-control
 		
 		.form-group
 			input(type="file", name="myfile", id="myfile")

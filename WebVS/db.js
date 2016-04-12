@@ -97,17 +97,45 @@ var AppSchema = new Schema({
     },
     Path: {	type: String, required: true},
     StartupFile: { type: String, required: true },
+	Package:{
+		name: {type: String  },
+		version: {type: String  },
+		private: {type: Boolean  },
+		scripts: {type: Array  },
+		description: {type: String  },
+		author: {type: Array  },
+		repository: {type: Array  },
+		engines: {type: Array  },
+		dependencies: {type: Array  },
+		devDependencies: {type: Array  },
+		keywords: {type: Array  },
+	}
+
+	/*Package: {
+		type: String,
+		get: function(data) {
+			try { 
+				return JSON.parse(data);
+			} catch(err) { 
+				return data;
+			}
+		},
+		set: function(data) {
+			return JSON.parse(data);
+		}
+	}*/
 });
 
 AppSchema.method({
     Start: function () {
 		var fs = require('fs');
 		var spawn = require('child_process').spawn
+		var exec = require('child_process').exec
 		child2 = spawn('sudo', ["-u",this.UserOwner,this.Path + "touch",'logFile.log'],{detached: true})
-		child = spawn('sudo', ["-u",this.UserOwner,"PORT=" + this.Port ,"node",this.Path + this.StartupFile, this.Port],{detached: true})
-		
-		
-		logStream = fs.createWriteStream(this.Path + 'logFile.log', { flags: 'a', encoding: 'UTF-8'});
+		var att = this.StartupFile.split(" ")
+		//stdio: ['pipe', 1, 2, 'ipc']
+		child = spawn('sudo', ['-u', this.UserOwner, "PORT=" + this.Port,att[0],att[1],att[2],att[3],att[4]],{detached: true, cwd : this.Path})
+		//logStream = fs.createWriteStream(this.Path + 'logFile.log', { flags: 'a', encoding: 'UTF-8'});
 
         child.stdout.pipe(logStream);
         child.stderr.pipe(logStream);
@@ -125,7 +153,7 @@ AppSchema.method({
         return this.PID
     },
 	Stop: function () {
-			child = spawn("kill", ["15", -this.PID])
+			child = spawn("sudo", [ "kill" , "15", -this.PID])
 			return true
 	},
 	

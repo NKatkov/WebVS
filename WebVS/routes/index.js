@@ -50,13 +50,12 @@ module.exports = function (app) {
 	app.use('/dashboard', require('./dashboard'));
 	
 	
+	app.use('/npm', require('./npm'));
 	app.use('/app', require('./apps'));
 	app.use('/man/srv', require('./srv'));
 	app.use('/man/users', require('./users'));
 	app.use('/man/package', require('./package'));
 
-
-	// ��������� ������
 	app.use(function (req, res, next) {
 		var err = new Error('Not found...');
 		err.status = 404;

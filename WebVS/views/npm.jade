@@ -1,0 +1,54 @@
+extends layout
+
+block content
+	h1= "Управление npm приложений"
+
+	.navbar.navbar-default(role='navigation')
+		.container-fluid
+			.navbar-collapse.collapse
+				.btn.btn-default.btn-ms.active
+					span.glyphicon.glyphicon-home
+						a(href="/app") Список
+				.btn.btn-default.btn-ms
+					span.glyphicon.glyphicon-plus
+						a(href="/app/install") Приложение
+				if(app.user.IsAdmin())
+					.btn.btn-default.btn-ms
+						span.glyphicon.glyphicon-plus
+							a(href="/app/ports") Порты(адм)
+
+		- var i = 1,key
+		each key in List	
+			#accordion.panel-group(role='tablist', aria-multiselectable='true')
+				.panel.panel-default(style="margin-bottom: -18px; margin-top: 5px;")
+					div(id='heading#{i}')
+					table.table
+						thead
+							tr
+								th #{i}
+								th #{key.AppName}
+								th 
+									a(role='button', data-toggle='collapse', data-parent='#accordion', href='#collapse#{i}', aria-expanded='false', aria-controls='collapse#{i}', class='collapsed') Показать список
+					div(id='collapse#{i}').panel-collapse.collapse(role="tabpanel", aria-labelledby="heading#{i}")
+						.panel-body
+							table.table
+								thead
+									tr
+										th Пакет
+										th Версия
+								tbody
+									-for(Name in key.Package.dependencies[0])
+										tr
+											td			
+												p #{Name}
+											td
+												p #{key.Package.dependencies[0][Name]}
+										
+										
+							-i++								
+	p #{JSON.stringify(List.Package)}
+	
+	if (error)
+		.alert.alert-danger #{error}
+	if (status)
+		.alert.alert-success #{status}
