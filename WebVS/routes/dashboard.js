@@ -44,9 +44,9 @@ function getInfo(result, onComplete) {
                         Drives.push( {
                             Drive: aDrives[i].filesystem,
                             Mounted: aDrives[i].mounted,
-                            Blocks : Math.round(aDrives[i].blocks /1024 / 1024 / 1024) + 'GB',
-                            Used: Math.round(aDrives[i].used / 1024 / 1024 / 1024) + 'GB',
-                            Available: Math.round(aDrives[i].available / 1024 / 1024 / 1024) + 'GB',
+                            Blocks : Math.round(aDrives[i].blocks /1024 / 1024) + 'MB',
+                            Used: Math.round(aDrives[i].used / 1024 / 1024) + 'MB',
+                            Available: Math.round(aDrives[i].available / 1024 / 1024) + 'MB',
                             Capacity: aDrives[i].capacity,
                         });
                     }

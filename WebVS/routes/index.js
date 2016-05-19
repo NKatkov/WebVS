@@ -49,7 +49,7 @@ module.exports = function (app) {
 	app.use('/_test', require('./_test'));
 	app.use('/dashboard', require('./dashboard'));
 	
-	
+	app.use('/dbs', require('./DBs'));
 	app.use('/npm', require('./npm'));
 	app.use('/app', require('./apps'));
 	app.use('/man/srv', require('./srv'));

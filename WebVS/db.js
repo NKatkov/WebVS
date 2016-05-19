@@ -6,11 +6,11 @@
 var net = require('net');
 var running = require('is-running')
 var spawn = require('child_process').spawn
-var conn = mongoose.connect('mongodb://nhost.cloudapp.net:27017/WebVS');
+var conn = mongoose.connect('mongodb://dbAdmin:RemW26mt@nhost.cloudapp.net:27017/WebVS');
 var db = mongoose.connection;
 db.on('error', function (error) {
     console.error.bind(console, 'connection error:');
-    var conn = mongoose.connect('mongodb://127.0.0.1:27017/WebVS');
+    var conn = mongoose.connect('mongodb://dbAdmin:RemW26mt@127.0.0.1:27017/WebVS');
 });
 //
 db.once('open', function callback() {
@@ -135,7 +135,7 @@ AppSchema.method({
 		var att = this.StartupFile.split(" ")
 		//stdio: ['pipe', 1, 2, 'ipc']
 		child = spawn('sudo', ['-u', this.UserOwner, "PORT=" + this.Port,att[0],att[1],att[2],att[3],att[4]],{detached: true, cwd : this.Path})
-		//logStream = fs.createWriteStream(this.Path + 'logFile.log', { flags: 'a', encoding: 'UTF-8'});
+		logStream = fs.createWriteStream(this.Path + 'logFile.log', { flags: 'a', encoding: 'UTF-8'});
 
         child.stdout.pipe(logStream);
         child.stderr.pipe(logStream);
@@ -146,7 +146,7 @@ AppSchema.method({
         this.PID = child.pid
         this.save({}, function (err) {
             if (!err) {
-				child.unref();
+				//child.unref();
                 console.log('Error: ' + err)
             }
         })
@@ -174,8 +174,17 @@ var PortSchema = new Schema({
     Created: { type: Date, default: Date.now }
 });
 
+var DBSchema = new Schema({
+    NameDB: { type: String, required: true },
+    User: { type: String, required: true },
+    Logins: {type: Array, required: false },
+    Created: { type: Date, default: Date.now }
+});
+
+
 module.exports.conn = conn;
 module.exports.db = db;
+module.exports.dbs = mongoose.model("DBs", DBSchema);
 module.exports.Ports = mongoose.model("Ports", PortSchema);
 module.exports.User = mongoose.model("User", UserSchema);
 module.exports.Application = mongoose.model("Application", AppSchema);

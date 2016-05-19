@@ -1,0 +1,75 @@
+extends layout
+
+block content
+	h1 #{title}
+	
+	- var i = 1,key
+	each key in list[0].Logins
+		#accordion.panel-group(role='tablist', aria-multiselectable='true')
+			.panel.panel-default(style="margin-bottom: -18px; margin-top: 5px;")
+				div(id='heading#{i}')
+				table.table
+					thead
+						tr
+							th.ctext(width="10") #{i}
+							th.ltext Логин: #{key[0]}
+							th.ctext(width="214")
+								form(method="post", action="/dbs/#{list[0]._id}/remove")
+									a(role='button', data-toggle='collapse', data-parent='#accordion', href='#collapse#{i}', aria-expanded='false', aria-controls='collapse#{i}', class='collapsed').btn.btn-xs.btn-info Показать настройки
+									input(type='hidden', name="login",value="#{key[0]}")
+									button.btn.btn-xs.btn-danger
+										i.glyphicon.glyphicon-remove Удалить
+				div(id='collapse#{i}').panel-collapse.collapse(role="tabpanel", aria-labelledby="heading#{i}")
+					.panel-body
+							form(method="post", action="/dbs/#{list[0]._id}/edit")
+								.form-group
+									input(type='hidden', name="l5",value="#{key[0]}")
+									label Пароль
+									input(type="password", name="pass",value="").form-control
+								.form-group
+									label Права пользователя: 
+									select(name="role").form-control
+										option(value="")  Select role
+										option(value="dbOwner")  dbOwner
+										option(value="dbAdmin")  dbAdmin
+										option(value="userAdmin")  userAdmin
+										option(value="read")  read
+										option(value="readWrite")  readWrite
+								p #{status}
+								.rtext
+									button.btn.btn-primary Изменить 
+								-i++
+	.panel.panel-default(style="margin-bottom: -18px; margin-top: 5px;")
+				div(id='headingNew')
+				table.table
+					thead
+						tr
+							th 
+								a(role='button', data-toggle='collapse', data-parent='#accordion', href='#collapseNew', aria-expanded='false', aria-controls='collapse#{i}', class='collapsed') Добавить нового пользователя
+				div(id="collapseNew").panel-collapse.collapse(role="tabpanel", aria-labelledby="headingNew")
+					.panel-body
+							form(method="post", action="/dbs/#{list[0]._id}/edit")
+								.form-group
+									label Логин
+									input(type="text", name="login",value="asd2").form-control
+								.form-group
+									label Пароль
+									input(type="password", name="pass",value="asd2").form-control
+								.form-group
+									label Права пользователя: 
+									select(name="role").form-control
+										option(value="dbOwner")  dbOwner
+										option(value="dbAdmin")  dbAdmin
+										option(value="userAdmin")  userAdmin
+										option(value="read")  read
+										option(value="readWrite")  readWrite
+								p #{status}
+								.rtext
+									button.btn.btn-primary Добавить 
+
+	p #{list_user}
+
+	if (error)
+		.alert.alert-danger #{error}
+	if (status)
+		.alert.alert-success #{status}

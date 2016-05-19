@@ -1,0 +1,45 @@
+extends layout
+
+block content
+	h1 #{title}
+		.navbar.navbar-default(role='navigation')
+			.container-fluid
+				.navbar-header
+
+				.navbar-collapse.collapse
+					.btn.btn-default.btn-ms
+						span.glyphicon.glyphicon-home
+							a(href="/dbs") Список
+					.btn.btn-default.btn-ms.active
+						span.glyphicon.glyphicon-plus
+							a(href="/dbs/add") Добавить базу
+	- console.log(user)
+ 
+	form(method="post", action="/dbs/add")
+		.form-group
+			label(for="aModalRegPwd") Имя базы
+			input(type="text", name="db_name",value="asd").form-control
+		.form-group
+			label(for="aModalRegPwd") Логин
+			input(type="text", name="login",value="asd").form-control
+		.form-group
+			label(for="aModalRegPwd") Пароль
+			input(type="password", name="pass",value="asd").form-control
+		.form-group
+			label(for="aModalRegRole") Права пользователя: 
+			select(name="role").form-control
+				option(value="dbOwner")  dbOwner
+				option(value="dbAdmin")  dbAdmin
+				option(value="userAdmin")  userAdmin
+				option(value="read")  read
+				option(value="readWrite")  readWrite
+		p #{status}
+		.rtext
+			button.btn.btn-primary Создать
+
+	p #{list_user}
+
+	if (error)
+		.alert.alert-danger #{error}
+	if (status)
+		.alert.alert-success #{status}

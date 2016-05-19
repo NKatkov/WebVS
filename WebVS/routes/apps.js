@@ -1,6 +1,5 @@
 ﻿var express = require('express');
 var router = express.Router();
-var User = require('../db').User;
 var Application = require('../db').Application;
 var Ports = require('../db').Ports;
 var running = require('is-running')
@@ -68,7 +67,7 @@ router.post('/install',upload.single('myfile'), function (req, res) {
 			newApp.Port = result.Port
 			if(err){console.log('Error: ' + err)}
 			async.waterfall([
-				function(callback){
+				function(callback){ 
 					ch = exec("sudo -u " + newApp.UserOwner + ' unzip ' + req.file.path + " -d " + newApp.Path,{maxBuffer: 1024 * 500},function(error, stdout, stderr){
 						if(!error){
 							require('fs').readFile( newApp.Path + 'package.json', 'utf8', function (err, data) {
@@ -174,6 +173,26 @@ router.get('/:id/run', function (req, res) {
                 }
             }
 		})
+	} else {
+		res.redirect('/auth');
+	}
+});
+
+router.get('/:id/edit', function (req, res) {
+    if (req.user) {
+		Application.findOne({ _id: req.params.id }, function (err, app) {
+			res.render('app_edit', {Application: app });
+			
+		})
+        
+	} else {
+		res.redirect('/auth');
+	}
+});
+
+router.post('/:id/edit', function (req, res) {
+    if (req.user) {
+        res.redirect('/app');
 	} else {
 		res.redirect('/auth');
 	}

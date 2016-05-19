@@ -1,0 +1,48 @@
+extends layout
+
+block content
+	h1 #{title}
+		.navbar.navbar-default(role='navigation')
+			.container-fluid
+				.navbar-header
+
+				.navbar-collapse.collapse
+					.btn.btn-default.btn-ms.active
+						span.glyphicon.glyphicon-home
+							a(href="/dbs") Список
+					.btn.btn-default.btn-ms
+						span.glyphicon.glyphicon-plus
+							a(href="/dbs/add") Добавить базу
+
+	table.table
+		thead
+			tr
+				th №
+				th Имя базы
+				th Login
+				th Роль
+				th.ctext(width="20") Действие
+		tbody
+			- var i = 1,key
+			each key in list	 
+				tr
+					td #{i++}
+					td #{key.NameDB}
+					td 
+						table
+							each log in key.Logins
+								tr
+									td #{log[0]}
+					td
+						table
+							each log in key.Logins
+								tr
+									td #{log[1]}
+					td
+						a(href='/dbs/#{key._id}/edit').btn.btn-xs.btn-info Изменить 
+						a(href='/dbs/#{key._id}/delete').btn.btn-xs.btn-danger
+							i.glyphicon.glyphicon-remove Удалить
+	if (error)
+		.alert.alert-danger #{error}
+	if (status)
+		.alert.alert-success #{status}

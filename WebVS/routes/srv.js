@@ -1,7 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var Converter = require("csvtojson").Converter;
-var User = require('../db').User;
 
 router.get('/', function (req, res, next) {
     if (req.user) {
@@ -14,7 +12,6 @@ router.get('/', function (req, res, next) {
 router.get('/reboot', function (req, res) {
     if (req.user && req.user.IsAdmin()) {
         var exec = require('child_process').exec,
-            converter = new Converter({}),
             child = exec('chcp 65001 | sudo reboot -h now', function (error, stdout, stderr) {
 				console.log(error)
 				console.log(stdout)
@@ -29,7 +26,6 @@ router.get('/reboot', function (req, res) {
 router.get('/shutdown', function (req, res) {
     if (req.user && req.user.IsAdmin()) {
         var exec = require('child_process').exec,
-            converter = new Converter({}),
             child = exec('sudo shutdown -h now', function (error, stdout, stderr) {
                 res.render('srv', { title: 'Управление сервером ', status: stdout });
             });

@@ -3,49 +3,70 @@ extends layout
 block content
 	h1= "Управление npm приложений"
 
-	.navbar.navbar-default(role='navigation')
-		.container-fluid
-			.navbar-collapse.collapse
-				.btn.btn-default.btn-ms.active
-					span.glyphicon.glyphicon-home
-						a(href="/app") Список
-				.btn.btn-default.btn-ms
-					span.glyphicon.glyphicon-plus
-						a(href="/app/install") Приложение
-				if(app.user.IsAdmin())
-					.btn.btn-default.btn-ms
-						span.glyphicon.glyphicon-plus
-							a(href="/app/ports") Порты(адм)
-
-		- var i = 1,key
-		each key in List	
-			#accordion.panel-group(role='tablist', aria-multiselectable='true')
-				.panel.panel-default(style="margin-bottom: -18px; margin-top: 5px;")
-					div(id='heading#{i}')
-					table.table
-						thead
-							tr
-								th #{i}
-								th #{key.AppName}
-								th 
-									a(role='button', data-toggle='collapse', data-parent='#accordion', href='#collapse#{i}', aria-expanded='false', aria-controls='collapse#{i}', class='collapsed') Показать список
-					div(id='collapse#{i}').panel-collapse.collapse(role="tabpanel", aria-labelledby="heading#{i}")
-						.panel-body
-							table.table
-								thead
+	- var i = 1,key
+	each key in List	
+		#accordion.panel-group(role='tablist', aria-multiselectable='true')
+			.panel.panel-default(style="margin-bottom: -18px; margin-top: 5px;")
+				div(id='heading#{i}')
+				table.table
+					thead
+						tr
+							th.ctext(width="10") #{i}
+							th.ctext(width="200") #{key.AppName}
+							th.ctext(width="150")
+								a(role='button', data-toggle='collapse', data-parent='#accordion', href='#collapse#{i}', aria-expanded='false', aria-controls='collapse#{i}', class='collapsed') Показать список
+							th.ctext(width="214")
+								.btn.btn-default.btn-sm
+									span.glyphicon.glyphicon-plus
+										a(href="#", data-toggle='modal', data-target='#modal#{key._id}') Установить пакет
+				div(id='collapse#{i}').panel-collapse.collapse(role="tabpanel", aria-labelledby="heading#{i}")
+					.panel-body
+						table.table
+							thead
+								tr
+									th Пакет
+									th Версия
+									th Действие
+							tbody
+								-for(Name in key.Package.dependencies[0])
 									tr
-										th Пакет
-										th Версия
-								tbody
-									-for(Name in key.Package.dependencies[0])
-										tr
-											td			
-												p #{Name}
-											td
-												p #{key.Package.dependencies[0][Name]}
-										
-										
-							-i++								
+										td
+											p #{Name}
+											
+										td
+											p #{key.Package.dependencies[0][Name]}
+										td
+											form(method='post',action="/npm/del")
+												input(type="hidden", name="npm_name",value="#{Name}")
+												input(type="hidden", name="app_id",value="#{key._id}")
+												button.btn.btn-xs.btn-danger(type='submit')
+													i.glyphicon.glyphicon-remove Удалить
+									
+							-i++
+		div(id='modal#{key._id}').modal.fade
+			.modal-dialog.modal-sm.modal-content
+				.modal-header
+					button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+					h4.modal-title Установка нового npm пакета
+				.modal-body
+					form(method="post",action="/npm/install")
+						if (error)
+							.alert.alert-danger #{error}
+						.form-group
+							label Название пакета
+							input(type="text", name="npm_name").form-control
+						.form-group
+							label Версия:
+							input(type="text", name="ver").form-control
+						.form-group
+							.checkbox.form-control
+								label
+									input(type='checkbox', value='')
+									| Записать в package.json
+						.modal-footer
+							input(type="hidden", name="app_id",value="#{key._id}")
+							button.btn.btn-default(type='button', data-dismiss='modal') Закрыть
+							button.btn.btn-primary(type='submit') Установить
 	p #{JSON.stringify(List.Package)}
 	
 	if (error)

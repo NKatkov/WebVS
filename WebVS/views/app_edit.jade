@@ -2,7 +2,7 @@ extends layout
 
 block content
 	h1= "Управление приложениями Nodejs"
-
+		-console.log(Application)
 		.navbar.navbar-default(role='navigation')
 			.container-fluid
 				.navbar-header
@@ -12,29 +12,28 @@ block content
 						span.glyphicon.glyphicon-home
 							a(href="/app") Список
 					.btn.btn-default.btn-ms.active
-						span.glyphicon.glyphicon-plus
-							a(href="/app/install") Приложение
+						span.glyphicon.glyphicon-plus Приложение
 					if(app.user.IsAdmin())
 						.btn.btn-default.btn-ms
 							span.glyphicon.glyphicon-plus
 								a(href="/app/ports") Порты(адм)
 					
-	form(role="form", method="post", action="/app/install", enctype="multipart/form-data")
+	form(role="form", method="post", action="/app/edit", enctype="multipart/form-data")
 		.form-group
 			label Название:
-			input(type="text", name="AppName").form-control
+			input(type="text", name="AppName", value="#{Application.AppName}").form-control 
 		.form-group
 			label Укажите параметры запуска вашего приложения			
 			label (по умолчанию считывать из package.json):
 			.input-group
 				span.input-group-addon
 					input(type="checkbox")
-				input(type="text", name="AppJS",  placeholder="Команда запуска", data-toggle="tooltip",  title="Tooltip on left").form-control
+				input(type="text", name="AppJS", value="#{Application.StartupFile}",  placeholder="Команда запуска", data-toggle="tooltip",  title="Tooltip on left").form-control
 		
 		.form-group
 			input(type="file", name="myfile", id="myfile")
 		.rtext
-			button.btn.btn-primary Добавить
+			button.btn.btn-primary Изменить
 	if (error)
 		.alert.alert-danger #{error}
 	if (status)
